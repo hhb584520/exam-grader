@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamGrader - 智能试卷批改系统演示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .main-content {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+        }
+        
+        .demo-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .icon-blue { background: rgba(102, 126, 234, 0.2); }
+        .icon-green { background: rgba(72, 187, 120, 0.2); }
+        .icon-yellow { background: rgba(251, 191, 36, 0.2); }
+        .icon-red { background: rgba(239, 68, 68, 0.2); }
+        .icon-purple { background: rgba(126, 34, 206, 0.2); }
+        .icon-cyan { background: rgba(6, 182, 212, 0.2); }
+        .icon-orange { background: rgba(249, 115, 22, 0.2); }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .card-desc {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-content {
+            display: none;
+        }
+        
+        .demo-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .text-input, .select-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .textarea-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            min-height: 100px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .result-panel {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+        }
+        
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .score-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .question-result {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid;
+        }
+        
+        .question-result.correct {
+            background: rgba(72, 187, 120, 0.1);
+            border-color: #48bb78;
+        }
+        
+        .question-result.wrong {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: #ef4444;
+        }
+        
+        .tag {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+        
+        .weak-point {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .quiz-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .step-item {
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .step-item.correct {
+            background: rgba(72, 187, 120, 0.1);
+            border-left: 3px solid #48bb78;
+        }
+        
+        .step-item.wrong {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+        }
+        
+        .step-item.expected {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 3px solid #667eea;
+        }
+        
+        .error-type {
+            background: rgba(239, 68, 68, 0.2);
+            color: #dc2626;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-badge.correct {
+            background: rgba(72, 187, 120, 0.2);
+            color: #166534;
+        }
+
+        .status-badge.wrong {
+            background: rgba(239, 68, 68, 0.2);
+            color: #dc2626;
+        }
+
+        .tip-badge {
+            background: rgba(102, 126, 234, 0.2);
+            color: #4338ca;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .severity-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .severity-badge.low {
+            background: rgba(72, 187, 120, 0.2);
+            color: #166534;
+        }
+
+        .severity-badge.medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #92400e;
+        }
+
+        .severity-badge.high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #dc2626;
+        }
+
+        .step-tab-content {
+            display: none;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .step-tab-content.active {
+            display: block;
+        }
+        
+        .teaching-card {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .teaching-card h4 {
+            color: #92400e;
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .tab-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>📝 ExamGrader</h1>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" onclick="showSection('upload')">上传试卷</button>
+                <button class="nav-btn" onclick="showSection('grade')">试卷批改</button>
+                <button class="nav-btn" onclick="showSection('step')">步骤分析</button>
+                <button class="nav-btn" onclick="showSection('wrong')">错题本</button>
+                <button class="nav-btn" onclick="showSection('review')">复习建议</button>
+                <button class="nav-btn" onclick="showSection('student')">学生分析</button>
+                <button class="nav-btn" onclick="showSection('teacher')">教学建议</button>
+                <button class="nav-btn" onclick="showSection('quiz')">检查卷</button>
+                <button class="nav-btn" onclick="showSection('materials')">资料推荐</button>
+                <button class="nav-btn" onclick="showSection('exam-analysis')">真题分析</button>
+                <button class="nav-btn" onclick="showSection('review-plan')">复习计划</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- 上传试卷 -->
+        <section id="upload" class="section demo-content active">
+            <h2>📤 上传试卷</h2>
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-blue">📁</div>
+                    <div>
+                        <div class="card-title">试卷文件上传</div>
+                        <div class="card-desc">支持 PDF、Word、TXT 等多种格式</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>试卷文件</label>
+                    <input type="file" class="text-input" accept=".pdf,.doc,.docx,.txt">
+                </div>
+                <div class="form-group">
+                    <label>试卷ID</label>
+                    <input type="text" class="text-input" placeholder="math_test_001" value="math_test_001">
+                </div>
+                <div class="form-group">
+                    <label>试卷标题</label>
+                    <input type="text" class="text-input" placeholder="高中数学期中考试" value="高中数学期中考试">
+                </div>
+                <div class="form-group">
+                    <label>科目</label>
+                    <select class="select-input">
+                        <option>数学</option>
+                        <option>语文</option>
+                        <option>英语</option>
+                        <option>物理</option>
+                    </select>
+                </div>
+                <button class="submit-btn" onclick="simulateUpload()">上传试卷</button>
+                <div id="upload-result" style="margin-top: 1rem; display: none;">
+                    <div style="padding: 1rem; background: rgba(72, 187, 120, 0.1); border-radius: 8px; color: #48bb78;">
+                        ✅ 上传成功！试卷ID: math_test_001
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 试卷批改 -->
+        <section id="grade" class="section demo-content">
+            <h2>✏️ 试卷批改</h2>
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-green">🤖</div>
+                    <div>
+                        <div class="card-title">AI智能批改</div>
+                        <div class="card-desc">自动批改试卷，识别错题，分析知识点</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>试卷ID</label>
+                    <input type="text" class="text-input" placeholder="math_test_001" value="math_test_001">
+                </div>
+                <div class="form-group">
+                    <label>学生ID</label>
+                    <input type="text" class="text-input" placeholder="student_001" value="student_001">
+                </div>
+                <div class="form-group">
+                    <label>学生答案 (JSON)</label>
+                    <textarea class="textarea-input" placeholder='{"q1": "C", "q2": "19", "q3": "导数求解"}'>{"q1": "C", "q2": "18", "q3": "对函数求导得y'=3x²-6x"}</textarea>
+                </div>
+                <button class="submit-btn" onclick="simulateGrade()">开始批改</button>
+                <div id="grade-result" style="margin-top: 1.5rem; display: none;">
+                    <div class="result-panel">
+                        <div class="score-circle">
+                            <span class="score-value">85</span><span>/100</span>
+                        </div>
+                        <p>正确率: 85%</p>
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <h3>批改详情</h3>
+                        <div class="question-result correct">
+                            <strong>选择题1:</strong> 答案正确 (5/5分)
+                            <div style="margin-top: 0.5rem;">
+                                <span class="tag">函数计算</span>
+                                <span class="tag">简单</span>
+                            </div>
+                        </div>
+                        <div class="question-result wrong">
+                            <strong>填空题2:</strong> 答案错误 (0/5分)
+                            <p>你的答案: 18 | 正确答案: 19</p>
+                            <p>错误原因: 等差数列第10项计算错误，应为 1 + (10-1)×2 = 19</p>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="tag">等差数列</span>
+                                <span class="tag">中等</span>
+                            </div>
+                        </div>
+                        <div class="question-result correct">
+                            <strong>解答题3:</strong> 答案正确 (20/20分)
+                            <div style="margin-top: 0.5rem;">
+                                <span class="tag">导数</span>
+                                <span class="tag">困难</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤分析 -->
+        <section id="step" class="section demo-content">
+            <h2>🔍 步骤级错误分析</h2>
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-cyan">🧠</div>
+                    <div>
+                        <div class="card-title">解题步骤分析</div>
+                        <div class="card-desc">分析学生在哪个步骤出错，结合RAG系统提供正确解题方法和教学建议</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>题目内容</label>
+                    <textarea class="textarea-input" readonly>求函数 f(x) = x³ - 3x² + 2 的极值点，并判断是极大值还是极小值</textarea>
+                </div>
+                <div class="form-group">
+                    <label>学生解答</label>
+                    <textarea class="textarea-input">1. 对f(x)求导得f'(x) = 3x² - 6x
+2. 令f'(x) = 0，即 3x² - 6x = 0
+3. 解得 x = 0
+4. 所以x=0是极值点</textarea>
+                </div>
+                <button class="submit-btn" onclick="showStepAnalysis()">分析步骤</button>
+                <div id="step-result" style="margin-top: 1.5rem; display: none;">
+                    <div class="tab-container">
+                        <button class="tab-btn active" onclick="showStepTab('student-steps')">学生解题步骤</button>
+                        <button class="tab-btn" onclick="showStepTab('correct-steps')">RAG正确步骤</button>
+                        <button class="tab-btn" onclick="showStepTab('optimized-methods')">优化方法</button>
+                        <button class="tab-btn" onclick="showStepTab('error-analysis')">错误分析</button>
+                        <button class="tab-btn" onclick="showStepTab('teaching')">教师建议</button>
+                        <button class="tab-btn" onclick="showStepTab('learning')">学生建议</button>
+                    </div>
+
+                    <div id="student-steps" class="step-tab-content active">
+                        <h3>📝 学生解题步骤分析</h3>
+                        <div style="margin-top: 1rem;">
+                            <div class="step-item correct">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <strong>步骤1:</strong> 对f(x)求导得f'(x) = 3x² - 6x
+                                    <span class="status-badge correct">✓ 正确</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-top: 0.3rem;">
+                                    <span style="font-size: 0.85rem; color: #666;">知识点: 导数计算 | 目的: 求函数变化率</span>
+                                    <span style="font-size: 0.85rem; color: #48bb78;">掌握程度: 良好</span>
+                                </div>
+                            </div>
+                            <div class="step-item correct">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <strong>步骤2:</strong> 令f'(x) = 0，即 3x² - 6x = 0
+                                    <span class="status-badge correct">✓ 正确</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-top: 0.3rem;">
+                                    <span style="font-size: 0.85rem; color: #666;">知识点: 极值点条件 | 目的: 找到临界点</span>
+                                    <span style="font-size: 0.85rem; color: #48bb78;">掌握程度: 良好</span>
+                                </div>
+                            </div>
+                            <div class="step-item wrong">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <strong>步骤3:</strong> 解得 x = 0
+                                    <span class="status-badge wrong">✗ 错误</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-top: 0.3rem;">
+                                    <span style="font-size: 0.85rem; color: #666;">知识点: 解方程 | 目的: 求所有临界点</span>
+                                    <span style="font-size: 0.85rem; color: #dc2626;">掌握程度: 薄弱</span>
+                                </div>
+                                <span class="error-type">步骤遗漏</span>
+                                <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #dc2626;">遗漏了解 x = 2</p>
+                            </div>
+                            <div class="step-item wrong">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <strong>步骤4:</strong> 所以x=0是极值点
+                                    <span class="status-badge wrong">✗ 错误</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-top: 0.3rem;">
+                                    <span style="font-size: 0.85rem; color: #666;">知识点: 极值判断 | 目的: 判断极值类型</span>
+                                    <span style="font-size: 0.85rem; color: #dc2626;">掌握程度: 薄弱</span>
+                                </div>
+                                <span class="error-type">逻辑不完整</span>
+                                <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #dc2626;">未判断极值类型，缺少二阶导数分析</p>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem; padding: 1rem; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+                            <strong>📊 知识点掌握情况汇总：</strong>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="tag">导数计算 ✓</span>
+                                <span class="tag">极值点条件 ✓</span>
+                                <span class="weak-point">解方程 ✗</span>
+                                <span class="weak-point">极值判断 ✗</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="correct-steps" class="step-tab-content">
+                        <h3>📚 RAG知识库 - 正确解题方法</h3>
+                        <div style="margin-top: 1rem;">
+                            <div style="background: rgba(102, 126, 234, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                <strong>🔧 正确解题方法：</strong>导数求极值法
+                                <p style="margin-top: 0.5rem; font-size: 0.9rem;">利用导数求函数极值的标准方法：先求一阶导数找临界点，再用二阶导数判断极值类型</p>
+                            </div>
+                            
+                            <div style="background: rgba(72, 187, 120, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                <strong>📖 方法说明（来自RAG知识库）：</strong>
+                                <p style="margin-top: 0.5rem; font-size: 0.9rem;">这是求解函数极值的标准方法，适用于所有可导函数。关键在于：(1) 正确求导；(2) 找出所有临界点；(3) 使用二阶导数或一阶导数变化判断极值类型。</p>
+                            </div>
+                            
+                            <h4>✅ 标准解题步骤（来自RAG系统）</h4>
+                            <div class="step-item expected">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <strong>步骤1:</strong> 对f(x)求导：f'(x) = 3x² - 6x = 3x(x-2)
+                                    <span class="tip-badge">关键步骤</span>
+                                </div>
+                                <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【技巧】提取公因子3x，便于后续因式分解 | 【目的】找到函数变化率为零的点</p>
+                            </div>
+                            <div class="step-item expected">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <strong>步骤2:</strong> 令f'(x) = 0，解方程 3x(x-2) = 0
+                                    <span class="tip-badge">关键步骤</span>
+                                </div>
+                                <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【技巧】利用因式分解法，确保找到所有解 | 【目的】确定临界点</p>
+                            </div>
+                            <div class="step-item expected">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <strong>步骤3:</strong> 解得 x = 0 或 x = 2
+                                    <span class="tip-badge">易错点</span>
+                                </div>
+                                <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【注意】一元二次方程通常有两个解，需全部找出 | 【常见错误】遗漏解</p>
+                            </div>
+                            <div class="step-item expected">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <strong>步骤4:</strong> 求二阶导数：f''(x) = 6x - 6
+                                    <span class="tip-badge">关键步骤</span>
+                                </div>
+                                <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【知识点】二阶导数用于判断极值类型 | 【目的】准备判断极值类型</p>
+                            </div>
+                            <div class="step-item expected">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <strong>步骤5:</strong> 判断极值：f''(0) = -6 < 0，x=0是极大值点；f''(2) = 6 > 0，x=2是极小值点
+                                    <span class="tip-badge">结论</span>
+                                </div>
+                                <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【规则】f''(x)<0为极大值，f''(x)>0为极小值 | 【常见错误】忽略此步骤</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="optimized-methods" class="step-tab-content">
+                        <h3>💡 更优解题方法推荐</h3>
+                        <p style="color: #666; margin-top: 0.5rem;">基于RAG知识库，为您推荐更简单、更高效的解题方法，帮助拓展思维</p>
+                        
+                        <div style="margin-top: 1.5rem;">
+                            <div style="background: rgba(72, 187, 120, 0.1); border: 1px solid rgba(72, 187, 120, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4 style="color: #166534; margin-bottom: 1rem;">🌟 方法一：图像法（更直观）</h4>
+                                <div style="background: white; padding: 1rem; border-radius: 6px;">
+                                    <p><strong>方法说明：</strong></p>
+                                    <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">利用函数图像直观理解极值点，通过图像变化趋势判断极大值和极小值。这种方法特别适合对几何图形敏感的学生。</p>
+                                    
+                                    <p style="margin-top: 1rem;"><strong>优化后的步骤：</strong></p>
+                                    <div class="step-item expected">
+                                        <strong>步骤1:</strong> 画出函数 f(x) = x³ - 3x² + 2 的大致图像
+                                        <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【技巧】分析函数关键特征：增减性、拐点</p>
+                                    </div>
+                                    <div class="step-item expected">
+                                        <strong>步骤2:</strong> 观察图像走势，找到函数的"峰"和"谷"
+                                        <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【直观】图像的"峰"是极大值点，"谷"是极小值点</p>
+                                    </div>
+                                    <div class="step-item expected">
+                                        <strong>步骤3:</strong> 验证：f'(x) = 0 确定具体位置
+                                        <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【验证】用代数方法验证图像观察结果</p>
+                                    </div>
+                                    
+                                    <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(72, 187, 120, 0.1); border-radius: 6px;">
+                                        <p><strong>✨ 优势：</strong></p>
+                                        <ul style="margin-left: 1.5rem; font-size: 0.9rem;">
+                                            <li>直观易懂，无需复杂计算</li>
+                                            <li>建立数形结合思维</li>
+                                            <li>适合快速判断和验证答案</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div style="margin-top: 1rem;">
+                                        <p><strong>适用场景：</strong></p>
+                                        <p style="font-size: 0.9rem; color: #666;">当题目要求判断函数图像的大致形状，或需要快速验证答案时使用。</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4 style="color: #4338ca; margin-bottom: 1rem;">⚡ 方法二：导数符号表法（更快）</h4>
+                                <div style="background: white; padding: 1rem; border-radius: 6px;">
+                                    <p><strong>方法说明：</strong></p>
+                                    <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">通过分析导数符号的变化，快速判断极值点类型，避免二阶导数计算。</p>
+                                    
+                                    <p style="margin-top: 1rem;"><strong>优化后的步骤：</strong></p>
+                                    <div class="step-item expected">
+                                        <strong>步骤1:</strong> 求导：f'(x) = 3x² - 6x = 3x(x-2)
+                                        <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【分解】因式分解便于分析符号</p>
+                                    </div>
+                                    <div class="step-item expected">
+                                        <strong>步骤2:</strong> 画数轴，标出零点：x=0, x=2
+                                        <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【画图】在数轴上标出关键点</p>
+                                    </div>
+                                    <div class="step-item expected">
+                                        <strong>步骤3:</strong> 判断导数符号：
+                                        <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">- 当 x < 0 时，f'(x) > 0（正）→ 函数递增 ↑</p>
+                                        <p style="font-size: 0.85rem; color: #666;">- 当 0 < x < 2 时，f'(x) < 0（负）→ 函数递减 ↓</p>
+                                        <p style="font-size: 0.85rem; color: #666;">- 当 x > 2 时，f'(x) > 0（正）→ 函数递增 ↑</p>
+                                    </div>
+                                    <div class="step-item expected">
+                                        <strong>步骤4:</strong> 判断极值：
+                                        <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">- x=0：递增→递减 → <strong>极大值点</strong></p>
+                                        <p style="font-size: 0.85rem; color: #666;">- x=2：递减→递增 → <strong>极小值点</strong></p>
+                                    </div>
+                                    
+                                    <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(102, 126, 234, 0.1); border-radius: 6px;">
+                                        <p><strong>✨ 优势：</strong></p>
+                                        <ul style="margin-left: 1.5rem; font-size: 0.9rem;">
+                                            <li>无需计算二阶导数</li>
+                                            <li>步骤更少，速度更快</li>
+                                            <li>不易出错，逻辑清晰</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div style="margin-top: 1rem;">
+                                        <p><strong>适用场景：</strong></p>
+                                        <p style="font-size: 0.9rem; color: #666;">当只需要判断极值点位置和类型时，使用此方法更高效。</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4 style="color: #92400e; margin-bottom: 1rem;">🎯 方法三：配方法（技巧性）</h4>
+                                <div style="background: white; padding: 1rem; border-radius: 6px;">
+                                    <p><strong>方法说明：</strong></p>
+                                    <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">通过配方将函数化为顶点式，直接看出极值点。</p>
+                                    
+                                    <p style="margin-top: 1rem;"><strong>优化后的步骤：</strong></p>
+                                    <div class="step-item expected">
+                                        <strong>步骤1:</strong> 配方：f(x) = x³ - 3x² + 2 = (x-1)³ + 3(x-1) + 0
+                                        <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【技巧】提取(x-1)的因式进行配方</p>
+                                    </div>
+                                    <div class="step-item expected">
+                                        <strong>步骤2:</strong> 观察导数：f'(x) = 3(x-1)² + 3 = 3[(x-1)² + 1]
+                                        <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【变形】利用完全平方公式</p>
+                                    </div>
+                                    <div class="step-item expected">
+                                        <strong>步骤3:</strong> 分析极值：由 f'(x) = 3x(x-2) = 0 得 x=0 或 x=2
+                                        <p style="font-size: 0.85rem; margin-top: 0.3rem; color: #666;">【求解】因式分解求零点</p>
+                                    </div>
+                                    
+                                    <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(251, 191, 36, 0.1); border-radius: 6px;">
+                                        <p><strong>✨ 优势：</strong></p>
+                                        <ul style="margin-left: 1.5rem; font-size: 0.9rem;">
+                                            <li>展现代数技巧</li>
+                                            <li>建立配方思维</li>
+                                            <li>为后续学习打基础</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4 style="color: #0891b2; margin-bottom: 1rem;">🔑 快捷技巧</h4>
+                                <div style="background: white; padding: 1rem; border-radius: 6px;">
+                                    <div style="margin-bottom: 1rem;">
+                                        <p><strong>1. 导数分解技巧</strong></p>
+                                        <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">遇到高次多项式求导，先提取公因式：f'(x) = 3x² - 6x = 3x(x-2)，便于找零点。</p>
+                                    </div>
+                                    <div style="margin-bottom: 1rem;">
+                                        <p><strong>2. 数轴标记法</strong></p>
+                                        <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">在数轴上标出导数零点，用穿针引线法快速判断符号变化。</p>
+                                    </div>
+                                    <div>
+                                        <p><strong>3. 速判极值类型</strong></p>
+                                        <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">左正右负→极大值；左负右正→极小值。无需计算二阶导数！</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 1rem;">
+                                <h4 style="color: #dc2626; margin-bottom: 1rem;">📊 方法对比</h4>
+                                <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden;">
+                                    <thead>
+                                        <tr style="background: rgba(102, 126, 234, 0.1);">
+                                            <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd;">对比项</th>
+                                            <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd;">学生方法</th>
+                                            <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd;">推荐方法</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">计算量</td>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee; color: #dc2626;">需算二阶导数</td>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee; color: #166534;">只需一阶导数</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">步骤数</td>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee; color: #dc2626;">5步</td>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee; color: #166534;">4步</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">易错程度</td>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee; color: #dc2626;">较高（二阶求导易错）</td>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee; color: #166534;">较低（符号判断直观）</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 0.75rem;">效率提升</td>
+                                            <td style="padding: 0.75rem; color: #dc2626;">基准</td>
+                                            <td style="padding: 0.75rem; color: #166534;">节省30%时间</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="error-analysis" class="step-tab-content">
+                        <h3>🔍 错误深度分析</h3>
+                        <div style="margin-top: 1rem;">
+                            <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <div>
+                                        <strong>❌ 错误类型:</strong> 步骤遗漏 + 逻辑不完整
+                                        <p style="margin-top: 0.5rem;"><strong>错误位置:</strong> 第3步和第4步</p>
+                                        <p style="margin-top: 0.5rem;"><strong>错误严重程度:</strong> 中等</p>
+                                    </div>
+                                    <span class="severity-badge medium">中等</span>
+                                </div>
+                                <p style="margin-top: 1rem;"><strong>错误原因分析:</strong></p>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li>解方程时只找到一个解x=0，遗漏了x=2</li>
+                                    <li>没有使用二阶导数判断极值类型，结论不完整</li>
+                                    <li>缺乏解题完整性检查习惯，没有验证答案</li>
+                                </ul>
+                            </div>
+
+                            <div style="margin-top: 1.5rem;">
+                                <h4>📊 RAG知识库 - 常见错误参考</h4>
+                                <div style="background: rgba(251, 191, 36, 0.1); padding: 1rem; border-radius: 8px;">
+                                    <div style="margin-bottom: 1rem;">
+                                        <p><strong>1. 解方程遗漏解</strong> <span style="float: right; color: #92400e;">高频错误</span></p>
+                                        <p style="font-size: 0.9rem; color: #666;">学生常因因式分解不彻底或计算粗心导致漏解，此错误在一元二次方程求解中占比约40%</p>
+                                    </div>
+                                    <div style="margin-bottom: 1rem;">
+                                        <p><strong>2. 忽略二阶导数判断</strong> <span style="float: right; color: #92400e;">高频错误</span></p>
+                                        <p style="font-size: 0.9rem; color: #666;">部分学生直接根据一阶导数为零判断极值，忽略极值类型判断，此错误占比约35%</p>
+                                    </div>
+                                    <div>
+                                        <p><strong>3. 计算错误</strong> <span style="float: right; color: #f59e0b;">中频错误</span></p>
+                                        <p style="font-size: 0.9rem; color: #666;">导数计算或解方程过程中的算术错误，占比约20%</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 1.5rem;">
+                                <h4>🔄 错误模式分析</h4>
+                                <div style="background: rgba(102, 126, 234, 0.1); padding: 1rem; border-radius: 8px;">
+                                    <p><strong>错误模式:</strong> 解题不完整模式</p>
+                                    <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">该生倾向于在获得部分答案后就停止解题，缺乏完整性检查习惯。这可能与解题时间管理或对题目要求理解不充分有关。</p>
+                                    <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">【改进方向】加强解题完整性训练，培养分步检查习惯</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="teaching" class="step-tab-content">
+                        <h3>👨‍🏫 教师教学建议</h3>
+                        <div style="margin-top: 1rem;">
+                            <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4>🎯 教学重点</h4>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li><strong>导数求极值的完整步骤:</strong> 强调每一步的必要性和逻辑关系</li>
+                                    <li><strong>解方程的完整性:</strong> 训练学生找出所有解的能力</li>
+                                    <li><strong>二阶导数判断:</strong> 明确极值类型判断的方法</li>
+                                </ul>
+                            </div>
+
+                            <div style="background: rgba(102, 126, 234, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4>🎨 推荐教学方法</h4>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li><strong>分步演示法:</strong> 在黑板上逐步演示解题过程，强调每个步骤的目的</li>
+                                    <li><strong>错题案例分析:</strong> 展示常见错误案例，引导学生找出错误原因</li>
+                                    <li><strong>同伴互评:</strong> 让学生互相检查解题步骤，培养检查习惯</li>
+                                    <li><strong>分层练习:</strong> 设计不同难度的练习题，逐步提高要求</li>
+                                </ul>
+                            </div>
+
+                            <div style="background: rgba(249, 115, 22, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4>📝 练习设计建议</h4>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li><strong>步骤标注题:</strong> 要求学生在解题时标注每个步骤的目的</li>
+                                    <li><strong>多解问题训练:</strong> 专门设计有多个解的方程求解练习</li>
+                                    <li><strong>错误修正题:</strong> 给出错误解答，让学生找出并改正</li>
+                                    <li><strong>解题流程图:</strong> 让学生绘制解题流程图</li>
+                                </ul>
+                            </div>
+
+                            <div style="background: rgba(72, 187, 120, 0.1); border-radius: 8px; padding: 1rem;">
+                                <h4>📊 评价方式建议</h4>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li><strong>分步评分:</strong> 根据解题步骤完整性评分，而非只看最终答案</li>
+                                    <li><strong>过程性评价:</strong> 评价学生的解题思路和方法选择</li>
+                                    <li><strong>自我检查评价:</strong> 评价学生是否检查了答案的完整性</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="learning" class="step-tab-content">
+                        <h3>📖 学生学习建议</h3>
+                        <div style="margin-top: 1rem;">
+                            <div style="background: rgba(72, 187, 120, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4>🎯 关键练习要点</h4>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li><strong>分步解题:</strong> 养成按步骤解题的习惯，不要跳步</li>
+                                    <li><strong>答案检查:</strong> 解方程后检查是否有遗漏的解</li>
+                                    <li><strong>方法巩固:</strong> 复习导数求极值的完整步骤</li>
+                                    <li><strong>错题整理:</strong> 将同类错误整理到错题本，定期回顾</li>
+                                </ul>
+                            </div>
+
+                            <div style="background: rgba(102, 126, 234, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4>🧠 学习策略建议</h4>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li><strong>五步法:</strong> 求导→找临界点→解方程→求二阶导数→判断极值类型</li>
+                                    <li><strong>自我提问:</strong> 每完成一步，问自己"这一步完整吗？"</li>
+                                    <li><strong>可视化辅助:</strong> 画出函数图像辅助理解</li>
+                                    <li><strong>限时练习:</strong> 在规定时间内完成完整解题</li>
+                                </ul>
+                            </div>
+
+                            <div style="background: rgba(251, 191, 36, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4>⚠️ 需要避免的常见陷阱</h4>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li>解方程时只找一个解就停止</li>
+                                    <li>忘记用二阶导数判断极值类型</li>
+                                    <li>计算导数时出错</li>
+                                    <li>不检查最终答案</li>
+                                </ul>
+                            </div>
+
+                            <div style="background: rgba(126, 34, 206, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4>📅 复习计划建议</h4>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li><strong>第1-2天:</strong> 复习导数求极值的完整步骤，做5道基础题</li>
+                                    <li><strong>第3-4天:</strong> 重点练习解方程，确保找出所有解</li>
+                                    <li><strong>第5-6天:</strong> 综合练习，完整求解极值问题</li>
+                                    <li><strong>第7天:</strong> 回顾错题，总结错误模式</li>
+                                </ul>
+                            </div>
+
+                            <div style="background: rgba(6, 182, 212, 0.1); border-radius: 8px; padding: 1rem;">
+                                <h4>📚 推荐学习资源</h4>
+                                <ul style="margin-left: 1.5rem;">
+                                    <li>📖 《导数应用专题训练》- 重点练习求极值</li>
+                                    <li>📄 一元二次方程因式分解复习讲义</li>
+                                    <li>🎬 二阶导数判断极值微课视频</li>
+                                    <li>📝 导数求极值步骤流程图</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 错题本 -->
+        <section id="wrong" class="section demo-content">
+            <h2>📚 错题本</h2>
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-yellow">📖</div>
+                    <div>
+                        <div class="card-title">个人错题记录</div>
+                        <div class="card-desc">自动收集错题，方便复习巩固</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>学生ID</label>
+                    <input type="text" class="text-input" placeholder="student_001" value="student_001">
+                </div>
+                <button class="submit-btn" onclick="showWrongQuestions()">查询错题</button>
+                <div id="wrong-result" style="margin-top: 1.5rem; display: none;">
+                    <p>共 3 道错题</p>
+                    <div style="margin-top: 1rem;">
+                        <div class="question-result wrong">
+                            <p><strong>题目:</strong> 等差数列 1, 3, 5, 7, ... 的第10项是 ____</p>
+                            <p><strong>你的答案:</strong> 18</p>
+                            <p><strong>正确答案:</strong> 19</p>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="tag">等差数列</span>
+                                <span class="tag">中等</span>
+                            </div>
+                            <div class="teaching-card" style="margin-top: 0.5rem;">
+                                <p><strong>错误类型:</strong> 计算错误</p>
+                                <p><strong>正确步骤:</strong> aₙ = a₁ + (n-1)d = 1 + 9×2 = 19</p>
+                            </div>
+                        </div>
+                        <div class="question-result wrong">
+                            <p><strong>题目:</strong> 求函数 f(x) = x³ - 3x 的极值</p>
+                            <p><strong>你的答案:</strong> 在x=1处取得极值</p>
+                            <p><strong>正确答案:</strong> 在x=1处取得极小值，在x=-1处取得极大值</p>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="tag">导数</span>
+                                <span class="tag">困难</span>
+                            </div>
+                            <div class="teaching-card" style="margin-top: 0.5rem;">
+                                <p><strong>错误类型:</strong> 步骤遗漏</p>
+                                <p><strong>正确步骤:</strong> f'(x)=3x²-3=0，得x=±1，需分别判断极值类型</p>
+                            </div>
+                        </div>
+                        <div class="question-result wrong">
+                            <p><strong>题目:</strong> 解方程 x² - 5x + 6 = 0</p>
+                            <p><strong>你的答案:</strong> x = 2</p>
+                            <p><strong>正确答案:</strong> x = 2 或 x = 3</p>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="tag">一元二次方程</span>
+                                <span class="tag">简单</span>
+                            </div>
+                            <div class="teaching-card" style="margin-top: 0.5rem;">
+                                <p><strong>错误类型:</strong> 答案不完整</p>
+                                <p><strong>正确步骤:</strong> 因式分解(x-2)(x-3)=0，得x=2或x=3</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 复习建议 -->
+        <section id="review" class="section demo-content">
+            <h2>🎯 复习建议</h2>
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-red">💡</div>
+                    <div>
+                        <div class="card-title">个性化学习建议</div>
+                        <div class="card-desc">基于错题分析，生成针对性复习方案</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>学生ID</label>
+                    <input type="text" class="text-input" placeholder="student_001" value="student_001">
+                </div>
+                <button class="submit-btn" onclick="showReviewSuggestion()">获取建议</button>
+                <div id="review-result" style="margin-top: 1.5rem; display: none;">
+                    <h3>📊 知识点分析</h3>
+                    <p>该生在数列和导数章节存在明显薄弱环节，一元二次方程掌握较好。建议重点复习等差数列通项公式和导数求极值的方法。</p>
+                    
+                    <h3 style="margin-top: 1.5rem;">⚠️ 薄弱知识点</h3>
+                    <div>
+                        <span class="weak-point">等差数列通项公式</span>
+                        <span class="weak-point">导数求极值</span>
+                        <span class="weak-point">方程求解完整性</span>
+                    </div>
+                    
+                    <h3 style="margin-top: 1.5rem;">🔄 错误模式分析</h3>
+                    <p><strong>主要错误类型:</strong> 步骤遗漏、答案不完整</p>
+                    <p><strong>常见问题:</strong> 解方程时容易遗漏解，求极值时忽略二阶导数判断</p>
+                    
+                    <h3 style="margin-top: 1.5rem;">💡 复习建议</h3>
+                    <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>复习等差数列的定义和通项公式，多做数列计算题</li>
+                        <li>练习导数求极值的完整步骤，注意二阶导数判断</li>
+                        <li>解方程时养成检查所有解的习惯</li>
+                        <li>建议每天做5道相关练习题</li>
+                    </ul>
+                    
+                    <h3 style="margin-top: 1.5rem;">📖 推荐资源</h3>
+                    <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>《高中数学必修五》数列章节</li>
+                        <li>导数应用专题训练</li>
+                        <li>一元二次方程复习讲义</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 学生分析 -->
+        <section id="student" class="section demo-content">
+            <h2>👤 学生综合分析</h2>
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-orange">📈</div>
+                    <div>
+                        <div class="card-title">学生学习画像</div>
+                        <div class="card-desc">分析学生学习风格、错误模式和改进方向</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>学生ID</label>
+                    <input type="text" class="text-input" placeholder="student_001" value="student_001">
+                </div>
+                <button class="submit-btn" onclick="showStudentAnalysis()">生成分析报告</button>
+                <div id="student-result" style="margin-top: 1.5rem; display: none;">
+                    <div class="tab-container">
+                        <button class="tab-btn active" onclick="showTab('profile')">学习画像</button>
+                        <button class="tab-btn" onclick="showTab('errors')">错误模式</button>
+                        <button class="tab-btn" onclick="showTab('suggestions')">改进建议</button>
+                    </div>
+
+                    <div id="profile" class="tab-content active">
+                        <h3>🧑‍🎓 学生学习画像</h3>
+                        <div style="margin-top: 1rem;">
+                            <p><strong>学习风格:</strong> 逻辑型学习者，善于理解概念但在细节处理上需要加强</p>
+                            <p><strong>优势领域:</strong> 导数概念理解较好，计算能力较强</p>
+                            <p><strong>待提高领域:</strong> 解题步骤完整性、多解问题处理</p>
+                            <p><strong>学习潜力:</strong> 中等偏上，通过针对性训练可显著提升</p>
+                        </div>
+                    </div>
+
+                    <div id="errors" class="tab-content">
+                        <h3>🔍 错误模式分析</h3>
+                        <div style="margin-top: 1rem;">
+                            <p><strong>错误类型分布:</strong></p>
+                            <ul>
+                                <li>步骤遗漏: 40%</li>
+                                <li>计算错误: 30%</li>
+                                <li>概念错误: 20%</li>
+                                <li>粗心错误: 10%</li>
+                            </ul>
+                            <p style="margin-top: 1rem;"><strong>典型错误场景:</strong></p>
+                            <ul>
+                                <li>解方程时遗漏部分解</li>
+                                <li>求极值时忽略二阶导数判断</li>
+                                <li>等差数列项数计算错误</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="suggestions" class="tab-content">
+                        <h3>🎯 个性化改进建议</h3>
+                        <div style="margin-top: 1rem;">
+                            <p><strong>短期目标 (1-2周):</strong></p>
+                            <ul>
+                                <li>每天练习5道解方程题目，确保找出所有解</li>
+                                <li>复习导数求极值的完整步骤</li>
+                            </ul>
+                            <p style="margin-top: 1rem;"><strong>中期目标 (1个月):</strong></p>
+                            <ul>
+                                <li>完成导数应用专题训练</li>
+                                <li>建立错题本，定期复习</li>
+                            </ul>
+                            <p style="margin-top: 1rem;"><strong>学习策略:</strong></p>
+                            <ul>
+                                <li>使用分步解题法，确保每一步都正确</li>
+                                <li>解题后检查答案完整性</li>
+                                <li>定期回顾错题，总结规律</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 教学建议 -->
+        <section id="teacher" class="section demo-content">
+            <h2>👨‍🏫 教学建议</h2>
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-purple">🎓</div>
+                    <div>
+                        <div class="card-title">教师端教学支持</div>
+                        <div class="card-desc">基于班级错题分析，提供教学改进建议</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>学科</label>
+                    <select class="select-input" id="subject-select">
+                        <option>数学</option>
+                        <option>语文</option>
+                        <option>英语</option>
+                        <option>物理</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>知识点（可选）</label>
+                    <input type="text" class="text-input" placeholder="例如：导数、等差数列" id="topic-input">
+                </div>
+                <button class="submit-btn" onclick="showTeachingSuggestions()">获取教学建议</button>
+                <div id="teacher-result" style="margin-top: 1.5rem; display: none;">
+                    <h3>📚 数学学科教学建议</h3>
+                    
+                    <div style="margin-top: 1rem;">
+                        <h4>🎯 教学目标</h4>
+                        <ul>
+                            <li>帮助学生掌握导数的基本概念和应用</li>
+                            <li>培养学生完整解题的思维习惯</li>
+                            <li>提高学生解方程的准确性和完整性</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-top: 1.5rem;">
+                        <h4>📌 教学重点</h4>
+                        <ul>
+                            <li>导数求极值的完整步骤</li>
+                            <li>一元二次方程的解法</li>
+                            <li>等差数列通项公式</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-top: 1.5rem;">
+                        <h4>⚠️ 学生常见错误</h4>
+                        <ul>
+                            <li>解方程时遗漏解</li>
+                            <li>求极值时忽略二阶导数判断</li>
+                            <li>等差数列项数计算错误</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-top: 1.5rem;">
+                        <h4>🎨 教学方法建议</h4>
+                        <ul>
+                            <li>采用分步演示法，强调解题步骤的完整性</li>
+                            <li>使用错题案例分析，引导学生找出错误原因</li>
+                            <li>组织小组讨论，分享解题经验</li>
+                            <li>设计分层练习，满足不同水平学生需求</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-top: 1.5rem;">
+                        <h4>📝 练习设计建议</h4>
+                        <ul>
+                            <li>设计多解题训练，强调答案完整性</li>
+                            <li>增加步骤标注题，培养规范解题习惯</li>
+                            <li>提供错误案例分析题</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-top: 1.5rem;">
+                        <h4>📊 评价方式建议</h4>
+                        <ul>
+                            <li>采用分步评分，重视解题过程</li>
+                            <li>设置过程性评价指标</li>
+                            <li>定期进行错题回顾测试</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 检查卷 -->
+        <section id="quiz" class="section demo-content">
+            <h2>📝 生成检查卷</h2>
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-blue">📋</div>
+                    <div>
+                        <div class="card-title">个性化检查卷</div>
+                        <div class="card-desc">根据薄弱知识点生成针对性检查卷</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>学生ID</label>
+                    <input type="text" class="text-input" placeholder="student_001" value="student_001">
+                </div>
+                <div class="form-group">
+                    <label>题目数量</label>
+                    <input type="number" class="text-input" value="5" min="1" max="20">
+                </div>
+                <button class="submit-btn" onclick="showQuiz()">生成检查卷</button>
+                <div id="quiz-result" style="margin-top: 1.5rem; display: none;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 12px;">
+                        <h3>高中数学专项检查卷</h3>
+                        <p>科目: 数学 | 总分: 50分 | 题目数: 5道</p>
+                        <p style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">针对薄弱点: 等差数列、导数极值、方程求解</p>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <div class="quiz-item">
+                            <strong>1. 选择题 (5分)</strong>
+                            <p>等差数列 2, 5, 8, 11, ... 的第15项是？</p>
+                            <p>A. 44 B. 42 C. 47 D. 40</p>
+                            <p style="color: #48bb78;">参考答案: A</p>
+                            <span class="tag">等差数列</span>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;"><strong>解题提示:</strong> aₙ = a₁ + (n-1)d = 2 + 14×3 = 44</p>
+                        </div>
+                        <div class="quiz-item">
+                            <strong>2. 填空题 (5分)</strong>
+                            <p>等差数列 {aₙ} 中，a₁=3，d=2，则 a₁₀ = ____</p>
+                            <p style="color: #48bb78;">参考答案: 21</p>
+                            <span class="tag">等差数列</span>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;"><strong>解题提示:</strong> a₁₀ = 3 + 9×2 = 21</p>
+                        </div>
+                        <div class="quiz-item">
+                            <strong>3. 解答题 (15分)</strong>
+                            <p>求函数 f(x) = x³ - 3x² + 2 的极值点，并判断是极大值还是极小值</p>
+                            <p style="color: #48bb78;">参考答案: x=0（极大值）, x=2（极小值）</p>
+                            <span class="tag">导数</span>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;"><strong>解题步骤:</strong> 1.求导 f'(x)=3x²-6x 2.令f'(x)=0得x=0或x=2 3.用二阶导数判断极值类型</p>
+                        </div>
+                        <div class="quiz-item">
+                            <strong>4. 解答题 (15分)</strong>
+                            <p>解方程 2x² - 7x + 3 = 0</p>
+                            <p style="color: #48bb78;">参考答案: x=1/2 或 x=3</p>
+                            <span class="tag">一元二次方程</span>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;"><strong>解题步骤:</strong> 因式分解(2x-1)(x-3)=0，得x=1/2或x=3</p>
+                        </div>
+                        <div class="quiz-item">
+                            <strong>5. 选择题 (10分)</strong>
+                            <p>函数 f(x) = x³ - 3x 在 x=1 处的切线斜率是？</p>
+                            <p>A. 0 B. 3 C. -3 D. 6</p>
+                            <p style="color: #48bb78;">参考答案: A</p>
+                            <span class="tag">导数</span>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;"><strong>解题提示:</strong> f'(x)=3x²-3，f'(1)=0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 学习资料推荐 -->
+        <section id="materials" class="section demo-content">
+            <h2>📚 学习资料推荐</h2>
+            <p style="color: #666; margin-bottom: 1.5rem;">基于学生薄弱知识点，智能推荐最适合的学习资料（视频、动画、文档等）</p>
+            
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-green">🎯</div>
+                    <div>
+                        <div class="card-title">智能资料推荐</div>
+                        <div class="card-desc">痛点四解决方案：针对个人薄弱点，推荐个性化学习资料</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>学生ID</label>
+                    <input type="text" class="text-input" placeholder="student_001" value="student_001">
+                </div>
+                
+                <div class="form-group">
+                    <label>资料类型（可选）</label>
+                    <select class="select-input">
+                        <option value="">全部类型</option>
+                        <option value="video">视频教程</option>
+                        <option value="animation">动画演示</option>
+                        <option value="document">文档资料</option>
+                        <option value="exercise">练习题库</option>
+                    </select>
+                </div>
+                
+                <button class="submit-btn" onclick="showMaterials()">推荐学习资料</button>
+                
+                <div id="materials-result" style="margin-top: 1.5rem; display: none;">
+                    <div style="background: rgba(72, 187, 120, 0.1); border: 1px solid rgba(72, 187, 120, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <h4 style="color: #166534; margin-bottom: 0.5rem;">📊 学生薄弱知识点分析</h4>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <span class="tag" style="background: #fed7d7; color: #c53030;">导数极值 (掌握度: 45%)</span>
+                            <span class="tag" style="background: #feebc8; color: #c05621;">等差数列 (掌握度: 55%)</span>
+                            <span class="tag" style="background: #fefcbf; color: #975a16;">一元二次方程 (掌握度: 60%)</span>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin-bottom: 1rem;">🎯 推荐学习资料</h4>
+                    
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: start; gap: 1rem;">
+                            <div style="font-size: 2rem;">🎬</div>
+                            <div style="flex: 1;">
+                                <h5 style="margin-bottom: 0.5rem;">导数极值的直观理解（动画）</h5>
+                                <p style="font-size: 0.85rem; color: #666; margin-bottom: 0.5rem;">通过动画演示，直观理解导数极值的几何意义</p>
+                                <div style="display: flex; gap: 1rem; font-size: 0.85rem; color: #888;">
+                                    <span>⏱️ 时长: 15分钟</span>
+                                    <span>📊 难度: 中等</span>
+                                    <span>⭐ 评分: 4.8/5.0</span>
+                                    <span>👥 适合: 高中数学</span>
+                                </div>
+                                <div style="margin-top: 0.5rem;">
+                                    <span class="tag" style="background: #e9d8fd; color: #6b46c1;">导数</span>
+                                    <span class="tag" style="background: #c6f6d5; color: #276749;">动画</span>
+                                </div>
+                                <p style="font-size: 0.85rem; color: #48bb78; margin-top: 0.5rem;"><strong>推荐理由:</strong> 针对导数极值掌握度较低，通过动画直观理解，效果提升显著</p>
+                            </div>
+                            <button class="submit-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">开始学习</button>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: start; gap: 1rem;">
+                            <div style="font-size: 2rem;">📺</div>
+                            <div style="flex: 1;">
+                                <h5 style="margin-bottom: 0.5rem;">等差数列解题技巧精讲（视频）</h5>
+                                <p style="font-size: 0.85rem; color: #666; margin-bottom: 0.5rem;">系统讲解等差数列的通项公式、求和公式及应用</p>
+                                <div style="display: flex; gap: 1rem; font-size: 0.85rem; color: #888;">
+                                    <span>⏱️ 时长: 25分钟</span>
+                                    <span>📊 难度: 中等</span>
+                                    <span>⭐ 评分: 4.6/5.0</span>
+                                    <span>👥 适合: 高中数学</span>
+                                </div>
+                                <div style="margin-top: 0.5rem;">
+                                    <span class="tag" style="background: #bee3f8; color: #2b6cb0;">等差数列</span>
+                                    <span class="tag" style="background: #fefcbf; color: #975a16;">视频</span>
+                                </div>
+                                <p style="font-size: 0.85rem; color: #48bb78; margin-top: 0.5rem;"><strong>推荐理由:</strong> 系统性强，适合巩固基础</p>
+                            </div>
+                            <button class="submit-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">开始学习</button>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: start; gap: 1rem;">
+                            <div style="font-size: 2rem;">📝</div>
+                            <div style="flex: 1;">
+                                <h5 style="margin-bottom: 0.5rem;">一元二次方程专项练习（题库）</h5>
+                                <p style="font-size: 0.85rem; color: #666; margin-bottom: 0.5rem;">包含50道精选练习题，覆盖各种解法</p>
+                                <div style="display: flex; gap: 1rem; font-size: 0.85rem; color: #888;">
+                                    <span>📝 题目: 50道</span>
+                                    <span>📊 难度: 基础-中等</span>
+                                    <span>⭐ 评分: 4.5/5.0</span>
+                                    <span>👥 适合: 高中数学</span>
+                                </div>
+                                <div style="margin-top: 0.5rem;">
+                                    <span class="tag" style="background: #fed7d7; color: #c53030;">一元二次方程</span>
+                                    <span class="tag" style="background: #e9d8fd; color: #6b46c1;">练习</span>
+                                </div>
+                                <p style="font-size: 0.85rem; color: #48bb78; margin-top: 0.5rem;"><strong>推荐理由:</strong> 通过大量练习巩固解题技巧</p>
+                            </div>
+                            <button class="submit-btn" style="padding: 0.5rem 1rem; font-size: 0.85rem;">开始练习</button>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+                        <h5 style="color: #4338ca; margin-bottom: 0.5rem;">📅 学习顺序建议</h5>
+                        <ol style="margin-left: 1.5rem; font-size: 0.9rem; color: #666;">
+                            <li style="margin-bottom: 0.3rem;">先观看"导数极值的直观理解"动画（15分钟）</li>
+                            <li style="margin-bottom: 0.3rem;">然后学习"等差数列解题技巧精讲"视频（25分钟）</li>
+                            <li style="margin-bottom: 0.3rem;">最后完成"一元二次方程专项练习"（建议分2-3次完成）</li>
+                        </ol>
+                        <p style="font-size: 0.85rem; color: #888; margin-top: 0.5rem;">💡 预计总学习时长: 60-90分钟</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 资料评分 -->
+            <div class="demo-card" style="margin-top: 1.5rem;">
+                <div class="card-header">
+                    <div class="icon icon-blue">⭐</div>
+                    <div>
+                        <div class="card-title">学习资料评分</div>
+                        <div class="card-desc">学习完成后，对资料进行评分，帮助优化推荐系统</div>
+                    </div>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="margin-bottom: 1rem;">📊 资料有效性评估</h4>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666;">学习资料ID</label>
+                            <input type="text" class="text-input" value="MAT-VIDEO-001" style="margin-top: 0.3rem;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666;">学生ID</label>
+                            <input type="text" class="text-input" value="student_001" style="margin-top: 0.3rem;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-size: 0.85rem; color: #666;">评分（1-5星）</label>
+                        <div style="margin-top: 0.3rem; font-size: 1.5rem;">
+                            <span style="color: #fbbf24;">★★★★</span><span style="color: #e2e8f0;">★</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-size: 0.85rem; color: #666;">学习效果评分（0-100）</label>
+                        <input type="number" class="text-input" value="85" min="0" max="100" style="margin-top: 0.3rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-size: 0.85rem; color: #666;">学习成果描述</label>
+                        <textarea class="text-input" style="margin-top: 0.3rem; min-height: 80px;" placeholder="描述学习后的收获...">通过动画演示，直观理解了导数极值的几何意义，掌握了判断极值的方法。</textarea>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-size: 0.85rem; color: #666;">学习时长（分钟）</label>
+                        <input type="number" class="text-input" value="18" style="margin-top: 0.3rem;">
+                    </div>
+                    
+                    <button class="submit-btn">提交评分</button>
+                    
+                    <div style="margin-top: 1rem; padding: 1rem; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <h5 style="margin-bottom: 0.5rem;">📈 资料评分统计</h5>
+                        <div style="display: flex; gap: 2rem; font-size: 0.85rem; color: #666;">
+                            <div>
+                                <div style="font-size: 1.5rem; color: #48bb78; font-weight: 600;">4.7</div>
+                                <div>平均评分</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5rem; color: #667eea; font-weight: 600;">86%</div>
+                                <div>平均效果分</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5rem; color: #ed8936; font-weight: 600;">1,245</div>
+                                <div>学习人数</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 高考真题分析 -->
+        <section id="exam-analysis" class="section demo-content">
+            <h2>📊 高考真题分析</h2>
+            <p style="color: #666; margin-bottom: 1.5rem;">分析历年高考真题，对比学生掌握情况，生成针对性复习建议</p>
+            
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-purple">🎯</div>
+                    <div>
+                        <div class="card-title">考前复习辅助</div>
+                        <div class="card-desc">提取各年知识点，与学生学习情况对比，生成针对性复习题</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>学生ID</label>
+                    <input type="text" class="text-input" placeholder="student_001" value="student_001">
+                </div>
+                
+                <div class="form-group">
+                    <label>学科</label>
+                    <select class="select-input">
+                        <option>数学</option>
+                        <option>语文</option>
+                        <option>英语</option>
+                        <option>物理</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>分析年份（可多选）</label>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.3rem; cursor: pointer;">
+                            <input type="checkbox" checked> 2023年
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.3rem; cursor: pointer;">
+                            <input type="checkbox" checked> 2022年
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.3rem; cursor: pointer;">
+                            <input type="checkbox" checked> 2021年
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.3rem; cursor: pointer;">
+                            <input type="checkbox"> 2020年
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="submit-btn" onclick="showExamAnalysis()">开始分析</button>
+                
+                <div id="exam-analysis-result" style="margin-top: 1.5rem; display: none;">
+                    <div style="background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                        <h3>📈 高考数学知识点分析报告</h3>
+                        <p>分析年份: 2021-2023 | 学生: student_001</p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="background: #c6f6d5; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: #276749;">12</div>
+                            <div style="font-size: 0.85rem; color: #666;">已掌握高频点</div>
+                        </div>
+                        <div style="background: #fed7d7; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: #c53030;">5</div>
+                            <div style="font-size: 0.85rem; color: #666;">薄弱高频点</div>
+                        </div>
+                        <div style="background: #feebc8; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: #c05621;">3</div>
+                            <div style="font-size: 0.85rem; color: #666;">未学习高频点</div>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin-bottom: 1rem;">🔥 高频知识点TOP 10</h4>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                            <thead>
+                                <tr style="background: #f8fafc;">
+                                    <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #e2e8f0;">知识点</th>
+                                    <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0;">考查频率</th>
+                                    <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0;">平均难度</th>
+                                    <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0;">掌握度</th>
+                                    <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #e2e8f0;">状态</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0;">导数应用</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">⭐⭐⭐⭐⭐</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">中等</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">45%</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;"><span style="background: #fed7d7; color: #c53030; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">薄弱</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0;">等差数列</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">⭐⭐⭐⭐</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">简单</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">55%</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;"><span style="background: #feebc8; color: #c05621; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">待加强</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0;">三角函数</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">⭐⭐⭐⭐</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">中等</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">85%</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;"><span style="background: #c6f6d5; color: #276749; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">已掌握</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0;">立体几何</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">⭐⭐⭐⭐</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">困难</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">-</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;"><span style="background: #e9d8fd; color: #6b46c1; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">未学习</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.75rem; border-bottom: 1px solid #e2e8f0;">概率统计</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">⭐⭐⭐</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">中等</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;">78%</td>
+                                    <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e2e8f0;"><span style="background: #c6f6d5; color: #276749; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">已掌握</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 1rem;">
+                        <h5 style="color: #c53030; margin-bottom: 0.5rem;">⚠️ 重点复习建议</h5>
+                        <ul style="margin-left: 1.5rem; font-size: 0.9rem; color: #666;">
+                            <li style="margin-bottom: 0.3rem;"><strong>导数应用:</strong> 高频考点，掌握度仅45%，建议重点复习</li>
+                            <li style="margin-bottom: 0.3rem;"><strong>等差数列:</strong> 基础知识点，需要巩固</li>
+                            <li style="margin-bottom: 0.3rem;"><strong>立体几何:</strong> 未学习，建议尽快补充</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin-top: 1rem; background: rgba(72, 187, 120, 0.1); border: 1px solid rgba(72, 187, 120, 0.3); border-radius: 8px; padding: 1rem;">
+                        <h5 style="color: #276749; margin-bottom: 0.5rem;">✅ 优势知识点</h5>
+                        <p style="font-size: 0.9rem; color: #666;">三角函数、概率统计掌握较好，可适当减少复习时间</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 考前复习计划 -->
+        <section id="review-plan" class="section demo-content">
+            <h2>📅 考前复习计划</h2>
+            <p style="color: #666; margin-bottom: 1.5rem;">基于薄弱知识点和考试时间，智能制定个性化复习计划</p>
+            
+            <div class="demo-card">
+                <div class="card-header">
+                    <div class="icon icon-green">🎯</div>
+                    <div>
+                        <div class="card-title">智能复习计划生成</div>
+                        <div class="card-desc">痛点三解决方案：考前有针对性复习，老师精讲重点</div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                    <div class="form-group">
+                        <label>学生ID</label>
+                        <input type="text" class="text-input" placeholder="student_001" value="student_001">
+                    </div>
+                    <div class="form-group">
+                        <label>考试日期</label>
+                        <input type="date" class="text-input" value="2024-06-07">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>每天可用学习时间（分钟）</label>
+                    <input type="number" class="text-input" value="120" min="30" max="480">
+                </div>
+                
+                <button class="submit-btn" onclick="showReviewPlan()">生成复习计划</button>
+                
+                <div id="review-plan-result" style="margin-top: 1.5rem; display: none;">
+                    <div style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                        <h3>📋 个性化考前复习计划</h3>
+                        <p>学生: student_001 | 考试日期: 2024-06-07 | 剩余: 15天</p>
+                        <p style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">每日学习时长: 120分钟 | 重点攻克: 导数应用、等差数列、立体几何</p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="background: #e9d8fd; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: #6b46c1;">15</div>
+                            <div style="font-size: 0.85rem; color: #666;">总天数</div>
+                        </div>
+                        <div style="background: #bee3f8; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: #2b6cb0;">30h</div>
+                            <div style="font-size: 0.85rem; color: #666;">总时长</div>
+                        </div>
+                        <div style="background: #c6f6d5; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: #276749;">3</div>
+                            <div style="font-size: 0.85rem; color: #666;">重点知识点</div>
+                        </div>
+                        <div style="background: #feebc8; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: #c05621;">5</div>
+                            <div style="font-size: 0.85rem; color: #666;">检查点</div>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin-bottom: 1rem;">📅 每日复习计划</h4>
+                    
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>第1天 (2024-05-23)</strong>
+                                <span class="tag" style="background: #c6f6d5; color: #276749; margin-left: 0.5rem;">导数应用</span>
+                            </div>
+                            <span style="font-size: 0.85rem; color: #666;">120分钟</span>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <ul style="margin-left: 1.5rem; font-size: 0.9rem; color: #666;">
+                                <li style="margin-bottom: 0.3rem;">观看"导数极值的直观理解"动画（15分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">完成导数应用基础练习（30分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">整理错题，总结解题方法（15分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">完成导数应用提高题（45分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">复习巩固，自我检测（15分钟）</li>
+                            </ul>
+                            <p style="font-size: 0.85rem; color: #48bb78; margin-top: 0.5rem;"><strong>预期成果:</strong> 掌握导数极值的基本判断方法</p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>第2天 (2024-05-24)</strong>
+                                <span class="tag" style="background: #bee3f8; color: #2b6cb0; margin-left: 0.5rem;">等差数列</span>
+                            </div>
+                            <span style="font-size: 0.85rem; color: #666;">120分钟</span>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <ul style="margin-left: 1.5rem; font-size: 0.9rem; color: #666;">
+                                <li style="margin-bottom: 0.3rem;">观看"等差数列解题技巧精讲"视频（25分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">完成等差数列基础练习（35分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">总结通项公式和求和公式（20分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">完成等差数列综合题（30分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">错题整理（10分钟）</li>
+                            </ul>
+                            <p style="font-size: 0.85rem; color: #48bb78; margin-top: 0.5rem;"><strong>预期成果:</strong> 熟练运用等差数列公式</p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="background: #f8fafc; padding: 1rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>第3天 (2024-05-25)</strong>
+                                <span class="tag" style="background: #e9d8fd; color: #6b46c1; margin-left: 0.5rem;">立体几何</span>
+                            </div>
+                            <span style="font-size: 0.85rem; color: #666;">120分钟</span>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <ul style="margin-left: 1.5rem; font-size: 0.9rem; color: #666;">
+                                <li style="margin-bottom: 0.3rem;">学习立体几何基础概念（30分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">完成空间几何体练习（40分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">学习空间位置关系（30分钟）</li>
+                                <li style="margin-bottom: 0.3rem;">完成基础练习题（20分钟）</li>
+                            </ul>
+                            <p style="font-size: 0.85rem; color: #48bb78; margin-top: 0.5rem;"><strong>预期成果:</strong> 掌握立体几何基本概念</p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+                        <h5 style="color: #4338ca; margin-bottom: 0.5rem;">🎯 复习里程碑</h5>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.85rem;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <div style="font-weight: 600; margin-bottom: 0.3rem;">第5天</div>
+                                <div style="color: #666;">完成导数应用专项测试</div>
+                            </div>
+                            <div style="flex: 1; min-width: 200px;">
+                                <div style="font-weight: 600; margin-bottom: 0.3rem;">第10天</div>
+                                <div style="color: #666;">完成等差数列专项测试</div>
+                            </div>
+                            <div style="flex: 1; min-width: 200px;">
+                                <div style="font-weight: 600; margin-bottom: 0.3rem;">第15天</div>
+                                <div style="color: #666;">完成综合模拟测试</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>ExamGrader - 智能试卷批改系统 | Powered by OPEA</p>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.demo-content').forEach(section => section.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function showStepTab(tabId) {
+            document.querySelectorAll('.step-tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-container .tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+        
+        function showMaterials() {
+            document.getElementById('materials-result').style.display = 'block';
+        }
+        
+        function showExamAnalysis() {
+            document.getElementById('exam-analysis-result').style.display = 'block';
+        }
+        
+        function showReviewPlan() {
+            document.getElementById('review-plan-result').style.display = 'block';
+        }
+
+        function simulateUpload() {
+            document.getElementById('upload-result').style.display = 'block';
+        }
+
+        function simulateGrade() {
+            document.getElementById('grade-result').style.display = 'block';
+        }
+
+        function showStepAnalysis() {
+            document.getElementById('step-result').style.display = 'block';
+        }
+
+        function showWrongQuestions() {
+            document.getElementById('wrong-result').style.display = 'block';
+        }
+
+        function showReviewSuggestion() {
+            document.getElementById('review-result').style.display = 'block';
+        }
+
+        function showStudentAnalysis() {
+            document.getElementById('student-result').style.display = 'block';
+        }
+
+        function showTeachingSuggestions() {
+            document.getElementById('teacher-result').style.display = 'block';
+        }
+
+        function showQuiz() {
+            document.getElementById('quiz-result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

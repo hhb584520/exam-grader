@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamGrader 项目组件架构图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        /* 架构图样式 */
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .layer {
+            width: 100%;
+            text-align: center;
+        }
+
+        .layer-title {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .components {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .component {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .component:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .component.service {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .component.service:hover {
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.5);
+        }
+
+        .component.database {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.4);
+        }
+
+        .component.database:hover {
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.5);
+        }
+
+        .component.llm {
+            background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
+            box-shadow: 0 4px 15px rgba(159, 122, 234, 0.4);
+        }
+
+        .component.llm:hover {
+            box-shadow: 0 8px 25px rgba(159, 122, 234, 0.5);
+        }
+
+        .connector {
+            width: 4px;
+            height: 1.5rem;
+            background: linear-gradient(to bottom, #ddd, #bbb);
+            border-radius: 2px;
+        }
+
+        /* 组件关系图 */
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .flow-item {
+            background: #f8fafc;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        /* 服务架构 */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .service-card.api { border-color: #48bb78; }
+        .service-card.agent { border-color: #667eea; }
+        .service-card.db { border-color: #ed8936; }
+        .service-card.llm { border-color: #9f7aea; }
+        .service-card.embed { border-color: #38b2ac; }
+
+        .service-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .service-desc {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-features {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .service-features li {
+            padding: 0.3rem 0;
+            font-size: 0.85rem;
+            color: #555;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .service-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+        }
+
+        /* 数据库关系 */
+        .db-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .db-table {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .db-table-header {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 0.5rem;
+        }
+
+        .db-fields {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .db-relation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* 颜色图例 */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legend-color.frontend { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .legend-color.backend { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); }
+        .legend-color.database { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); }
+        .legend-color.ai { background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%); }
+
+        .footer {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ ExamGrader 项目组件架构图</h1>
+
+        <!-- 颜色图例 -->
+        <div class="section">
+            <h2>📊 图例说明</h2>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color frontend"></div>
+                    <span>前端组件</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color backend"></div>
+                    <span>后端服务</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color database"></div>
+                    <span>数据库</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color ai"></div>
+                    <span>AI服务</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 整体架构图 -->
+        <div class="section">
+            <h2>🌐 整体架构层次图</h2>
+            <div class="architecture">
+                <!-- 展示层 -->
+                <div class="layer">
+                    <div class="layer-title">🖥️ 展示层 (Presentation Layer)</div>
+                    <div class="components">
+                        <div class="component">UploadPanel</div>
+                        <div class="component">GradePanel</div>
+                        <div class="component">StepAnalysis</div>
+                        <div class="component">WrongQuestions</div>
+                        <div class="component">ReviewSuggestion</div>
+                        <div class="component">QuizGenerator</div>
+                    </div>
+                </div>
+                <div class="connector"></div>
+
+                <!-- 业务逻辑层 -->
+                <div class="layer">
+                    <div class="layer-title">⚙️ 业务逻辑层 (Business Logic Layer)</div>
+                    <div class="components">
+                        <div class="component service">API Service</div>
+                        <div class="component service">Agent Service</div>
+                    </div>
+                </div>
+                <div class="connector"></div>
+
+                <!-- 数据层 -->
+                <div class="layer">
+                    <div class="layer-title">💾 数据层 (Data Layer)</div>
+                    <div class="components">
+                        <div class="component database">PostgreSQL</div>
+                        <div class="component database">pgvector</div>
+                    </div>
+                </div>
+                <div class="connector"></div>
+
+                <!-- AI层 -->
+                <div class="layer">
+                    <div class="layer-title">🧠 AI层 (AI Layer)</div>
+                    <div class="components">
+                        <div class="component llm">vLLM Service</div>
+                        <div class="component llm">Embedding Service</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 组件关系流程图 -->
+        <div class="section">
+            <h2>🔄 组件交互流程图</h2>
+            <div class="flowchart">
+                <div class="flow-row">
+                    <div class="flow-item">📤 UploadPanel</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">📁 试卷数据</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">💾 Database</div>
+                </div>
+                
+                <div class="flow-row">
+                    <div class="flow-item">✏️ GradePanel</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">🔌 API Service</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">🤖 Agent Service</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">🧠 LLM Service</div>
+                </div>
+                
+                <div class="flow-row">
+                    <div class="flow-item">🔍 StepAnalysis</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">📚 RAG Vector DB</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">💡 优化方法推荐</div>
+                </div>
+                
+                <div class="flow-row">
+                    <div class="flow-item">📚 WrongQuestions</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">💾 wrong_questions表</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">🎯 ReviewSuggestion</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">📝 QuizGenerator</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 微服务架构详情 -->
+        <div class="section">
+            <h2>⚡ 微服务架构详情</h2>
+            <div class="service-grid">
+                <div class="service-card api">
+                    <div class="service-title">🌐 API Service</div>
+                    <div class="service-desc">基于FastAPI的RESTful服务，处理客户端请求</div>
+                    <ul class="service-features">
+                        <li>试卷上传与管理</li>
+                        <li>学生答案提交</li>
+                        <li>步骤分析接口</li>
+                        <li>复习建议接口</li>
+                        <li>检查卷生成接口</li>
+                    </ul>
+                </div>
+
+                <div class="service-card agent">
+                    <div class="service-title">🤖 Agent Service</div>
+                    <div class="service-desc">基于OPEA Comps的智能代理服务</div>
+                    <ul class="service-features">
+                        <li>试卷自动批改</li>
+                        <li>步骤级错误分析</li>
+                        <li>RAG知识库查询</li>
+                        <li>优化方法推荐</li>
+                        <li>个性化学习建议</li>
+                    </ul>
+                </div>
+
+                <div class="service-card db">
+                    <div class="service-title">💾 Database Service</div>
+                    <div class="service-desc">PostgreSQL + pgvector向量数据库</div>
+                    <ul class="service-features">
+                        <li>试卷数据存储</li>
+                        <li>错题记录管理</li>
+                        <li>知识点知识库</li>
+                        <li>步骤模板存储</li>
+                        <li>向量相似度检索</li>
+                    </ul>
+                </div>
+
+                <div class="service-card llm">
+                    <div class="service-title">🧠 LLM Service</div>
+                    <div class="service-desc">基于vLLM的大语言模型服务</div>
+                    <ul class="service-features">
+                        <li>智能批改推理</li>
+                        <li>步骤分析生成</li>
+                        <li>教学建议生成</li>
+                        <li>检查卷自动生成</li>
+                        <li>对话式回复</li>
+                    </ul>
+                </div>
+
+                <div class="service-card embed">
+                    <div class="service-title">🔗 Embedding Service</div>
+                    <div class="service-desc">文本向量化服务，支持RAG检索</div>
+                    <ul class="service-features">
+                        <li>题目文本向量化</li>
+                        <li>知识点嵌入生成</li>
+                        <li>向量相似度计算</li>
+                        <li>知识库索引构建</li>
+                    </ul>
+                </div>
+
+                <div class="service-card api">
+                    <div class="service-title">🎨 Web Frontend</div>
+                    <div class="service-desc">React + TypeScript前端应用</div>
+                    <ul class="service-features">
+                        <li>试卷上传界面</li>
+                        <li>批改结果展示</li>
+                        <li>步骤分析可视化</li>
+                        <li>错题本管理</li>
+                        <li>检查卷预览</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据库表关系 -->
+        <div class="section">
+            <h2>📊 数据库表关系图</h2>
+            <div class="db-diagram">
+                <div class="db-table">
+                    <div class="db-table-header">📝 exam_papers（试卷表）</div>
+                    <div class="db-fields">paper_id, title, subject, content, created_at</div>
+                </div>
+
+                <div class="db-relation">1 → N</div>
+
+                <div class="db-table">
+                    <div class="db-table-header">✏️ student_answers（学生答案表）</div>
+                    <div class="db-fields">id, paper_id, student_id, answers, score, graded, graded_at</div>
+                </div>
+
+                <div class="db-relation">1 → N</div>
+
+                <div class="db-table">
+                    <div class="db-table-header">❌ wrong_questions（错题表）</div>
+                    <div class="db-fields">id, question_id, student_id, paper_id, question_content, student_answer, correct_answer, knowledge_points, difficulty, step_analysis, correct_steps, common_mistakes, teaching_suggestions</div>
+                </div>
+
+                <div class="db-relation">↔️ 关联</div>
+
+                <div class="db-table">
+                    <div class="db-table-header">📚 knowledge_points（知识点表）</div>
+                    <div class="db-fields">id, point_id, subject, topic, description, correct_methods, common_errors, teaching_tips, solving_steps, alternative_methods, shortcut_techniques, embedding</div>
+                </div>
+
+                <div class="db-relation">↔️ 关联</div>
+
+                <div class="db-table">
+                    <div class="db-table-header">🧩 step_templates（步骤模板表）</div>
+                    <div class="db-fields">id, subject, topic, method_name, steps, examples, common_mistakes, error_types, correction_strategies, embedding</div>
+                </div>
+
+                <div class="db-relation">关联 ↔️</div>
+
+                <div class="db-table">
+                    <div class="db-table-header">👤 student_analysis（学生分析表）</div>
+                    <div class="db-fields">id, student_id, analysis_date, weak_topics, error_patterns, learning_style, improvement_suggestions</div>
+                </div>
+
+                <div class="db-relation">关联 ↔️</div>
+
+                <div class="db-table">
+                    <div class="db-table-header">🏫 class_analysis（班级分析表）</div>
+                    <div class="db-fields">id, class_id, analysis_date, overall_performance, common_errors, teaching_focus, student_progress</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据流图 -->
+        <div class="section">
+            <h2>🔀 数据流程图</h2>
+            <div style="background: #f8fafc; padding: 2rem; border-radius: 12px;">
+                <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.9rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <span style="font-weight: 600; color: #667eea;">1. 上传试卷 →</span>
+                        <span>前端UploadPanel</span>
+                        <span>→ API Service</span>
+                        <span>→ exam_papers表</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <span style="font-weight: 600; color: #48bb78;">2. 提交答案 →</span>
+                        <span>前端GradePanel</span>
+                        <span>→ API Service</span>
+                        <span>→ Agent Service</span>
+                        <span>→ LLM Service</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <span style="font-weight: 600; color: #ed8936;">3. 分析步骤 →</span>
+                        <span>Agent Service</span>
+                        <span>→ RAG检索(向量DB)</span>
+                        <span>→ 获取知识点/步骤模板</span>
+                        <span>→ LLM生成分析报告</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <span style="font-weight: 600; color: #9f7aea;">4. 存储错题 →</span>
+                        <span>Agent Service</span>
+                        <span>→ wrong_questions表</span>
+                        <span>→ 包含step_analysis/correct_steps等字段</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <span style="font-weight: 600; color: #38b2ac;">5. 生成建议 →</span>
+                        <span>前端ReviewSuggestion</span>
+                        <span>→ API Service</span>
+                        <span>→ 查询student_analysis</span>
+                        <span>→ 返回个性化建议</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <span style="font-weight: 600; color: #d69e2e;">6. 生成检查卷 →</span>
+                        <span>前端QuizGenerator</span>
+                        <span>→ API Service</span>
+                        <span>→ Agent Service</span>
+                        <span>→ LLM根据错题生成检查卷</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能模块图 -->
+        <div class="section">
+            <h2>📦 功能模块架构</h2>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                <div style="background: rgba(102, 126, 234, 0.1); border-radius: 12px; padding: 1.5rem;">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">📝</div>
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">试卷批改模块</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 0.3rem 0; color: #666;">试卷上传与解析</li>
+                        <li style="padding: 0.3rem 0; color: #666;">学生答案接收</li>
+                        <li style="padding: 0.3rem 0; color: #666;">AI智能批改</li>
+                        <li style="padding: 0.3rem 0; color: #666;">成绩计算</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(239, 68, 68, 0.1); border-radius: 12px; padding: 1.5rem;">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">🔍</div>
+                    <h3 style="color: #dc2626; margin-bottom: 1rem;">步骤分析模块</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 0.3rem 0; color: #666;">解题步骤分解</li>
+                        <li style="padding: 0.3rem 0; color: #666;">错误定位分析</li>
+                        <li style="padding: 0.3rem 0; color: #666;">RAG知识库检索</li>
+                        <li style="padding: 0.3rem 0; color: #666;">优化方法推荐</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(72, 187, 120, 0.1); border-radius: 12px; padding: 1.5rem;">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">📚</div>
+                    <h3 style="color: #166534; margin-bottom: 1rem;">错题管理模块</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 0.3rem 0; color: #666;">错题自动收集</li>
+                        <li style="padding: 0.3rem 0; color: #666;">知识点关联</li>
+                        <li style="padding: 0.3rem 0; color: #666;">错题本管理</li>
+                        <li style="padding: 0.3rem 0; color: #666;">复习进度跟踪</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(251, 191, 36, 0.1); border-radius: 12px; padding: 1.5rem;">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">🎯</div>
+                    <h3 style="color: #92400e; margin-bottom: 1rem;">复习建议模块</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 0.3rem 0; color: #666;">薄弱知识点分析</li>
+                        <li style="padding: 0.3rem 0; color: #666;">个性化建议生成</li>
+                        <li style="padding: 0.3rem 0; color: #666;">复习计划制定</li>
+                        <li style="padding: 0.3rem 0; color: #666;">资源推荐</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(159, 122, 234, 0.1); border-radius: 12px; padding: 1.5rem;">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">📋</div>
+                    <h3 style="color: #7c3aed; margin-bottom: 1rem;">检查卷模块</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 0.3rem 0; color: #666;">个性化题目生成</li>
+                        <li style="padding: 0.3rem 0; color: #666;">难度自适应</li>
+                        <li style="padding: 0.3rem 0; color: #666;">知识点覆盖</li>
+                        <li style="padding: 0.3rem 0; color: #666;">答案与解析生成</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(6, 182, 212, 0.1); border-radius: 12px; padding: 1.5rem;">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">👨‍🏫</div>
+                    <h3 style="color: #0891b2; margin-bottom: 1rem;">教学支持模块</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 0.3rem 0; color: #666;">学生学习画像</li>
+                        <li style="padding: 0.3rem 0; color: #666;">班级分析报告</li>
+                        <li style="padding: 0.3rem 0; color: #666;">教学建议生成</li>
+                        <li style="padding: 0.3rem 0; color: #666;">学习数据分析</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🏗️ ExamGrader 项目组件架构图 | 基于微服务架构设计 | Powered by OPEA</p>
+        </footer>
+    </div>
+</body>
+</html>

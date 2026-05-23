@@ -36,7 +36,7 @@ export default function App() {
         {renderPage()}
       </main>
       <footer className="footer">
-        <p>ExamGrader - 智能试卷批改系统 | Powered by OPEA</p>
+        <p>ExamGrader - Intelligent Exam Grading System | Powered by OPEA</p>
       </footer>
     </div>
   )

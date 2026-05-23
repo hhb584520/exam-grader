@@ -24,39 +24,39 @@ export default function StepAnalysis() {
   const [activeTab, setActiveTab] = useState('student-steps')
 
   const mockAnalysis: StepAnalysisResult = {
-    question_type: '解答题',
-    knowledge_points: ['导数计算', '极值判断', '解方程'],
+    question_type: 'Problem Solving',
+    knowledge_points: ['Derivative Calculation', 'Extremum Judgment', 'Equation Solving'],
     student_steps: [
-      { step_number: 1, content: '对f(x)求导得f\'(x) = 3x² - 6x', is_correct: true },
-      { step_number: 2, content: '令f\'(x) = 0，即 3x² - 6x = 0', is_correct: true },
-      { step_number: 3, content: '解得 x = 0', is_correct: false },
-      { step_number: 4, content: '所以x=0是极值点', is_correct: false },
+      { step_number: 1, content: 'Derive f(x) to get f\'(x) = 3x² - 6x', is_correct: true },
+      { step_number: 2, content: 'Set f\'(x) = 0, i.e., 3x² - 6x = 0', is_correct: true },
+      { step_number: 3, content: 'Solve to get x = 0', is_correct: false },
+      { step_number: 4, content: 'So x=0 is the extreme point', is_correct: false },
     ],
     error_step_index: 2,
-    error_step_content: '解得 x = 0',
-    error_reason: '解方程时只找到一个解x=0，遗漏了x=2；没有使用二阶导数判断极值类型',
-    error_type: '步骤遗漏',
+    error_step_content: 'Solve to get x = 0',
+    error_reason: 'Only found one solution x=0 when solving the equation, missed x=2; did not use second derivative to determine extremum type',
+    error_type: 'Step Omission',
     correct_steps: [
-      '对f(x)求导：f\'(x) = 3x² - 6x = 3x(x-2)',
-      '令f\'(x) = 0，解方程 3x(x-2) = 0',
-      '解得 x = 0 或 x = 2',
-      '求二阶导数：f\'\'(x) = 6x - 6',
-      '判断极值：f\'\'(0) = -6 < 0，x=0是极大值点；f\'\'(2) = 6 > 0，x=2是极小值点',
+      'Derive f(x): f\'(x) = 3x² - 6x = 3x(x-2)',
+      'Set f\'(x) = 0, solve 3x(x-2) = 0',
+      'Solutions: x = 0 or x = 2',
+      'Find second derivative: f\'\'(x) = 6x - 6',
+      'Determine extremum: f\'\'(0) = -6 < 0, x=0 is local maximum; f\'\'(2) = 6 > 0, x=2 is local minimum',
     ],
-    correct_method: '导数求极值法',
+    correct_method: 'Derivative Method for Extremum',
     common_mistakes: [
-      { mistake: '解方程遗漏解', reason: '学生常因因式分解不彻底或计算粗心导致漏解' },
-      { mistake: '忽略二阶导数判断', reason: '部分学生直接根据一阶导数为零判断极值' },
-      { mistake: '计算错误', reason: '导数计算或解方程过程中的算术错误' },
+      { mistake: 'Missed solutions when solving equations', reason: 'Students often miss solutions due to incomplete factorization or careless calculation' },
+      { mistake: 'Ignored second derivative test', reason: 'Some students directly judge extremum based on first derivative being zero' },
+      { mistake: 'Calculation errors', reason: 'Arithmetic errors in derivative calculation or equation solving' },
     ],
-    teaching_suggestions: '在讲解导数求极值时，强调每一步的必要性；展示常见错误案例；设计专门训练解方程完整性的练习题；在作业评分中重视解题步骤的完整性。',
-    learning_tips: '养成按步骤解题的习惯，不要跳步；解方程后检查是否有遗漏的解；复习导数求极值的完整步骤；将同类错误整理到错题本，定期回顾。',
-    related_resources: ['《导数应用专题训练》', '一元二次方程因式分解复习讲义', '二阶导数判断极值微课视频'],
+    teaching_suggestions: 'When teaching derivative extremum finding, emphasize the necessity of each step; demonstrate common error cases; design exercises specifically for equation solving completeness; emphasize step completeness in homework grading.',
+    learning_tips: 'Develop step-by-step problem-solving habits, do not skip steps; check for missed solutions after solving equations; review complete steps for derivative extremum finding; organize similar errors in wrong question collection and review regularly.',
+    related_resources: ['"Derivative Applications Special Training"', 'Quadratic Equation Factorization Review Notes', 'Second Derivative Extremum Judgment Micro-video'],
   }
 
   const handleAnalysis = async () => {
     if (!questionContent || !studentAnswer) {
-      alert('请输入题目内容和学生解答')
+      alert('Please enter question content and student answer')
       return
     }
 
@@ -68,27 +68,27 @@ export default function StepAnalysis() {
 
   return (
     <div className="step-analysis-panel">
-      <h2>🔍 步骤级错误分析</h2>
+      <h2>🔍 Step-level Error Analysis</h2>
       <div className="form-group">
-        <label>题目内容</label>
+        <label>Question Content</label>
         <textarea
           value={questionContent}
           onChange={(e) => setQuestionContent(e.target.value)}
-          placeholder="请输入题目内容"
+          placeholder="Enter question content"
           className="textarea-input"
         />
       </div>
       <div className="form-group">
-        <label>学生解答</label>
+        <label>Student Answer</label>
         <textarea
           value={studentAnswer}
           onChange={(e) => setStudentAnswer(e.target.value)}
-          placeholder="请输入学生的解答过程（按步骤分行）"
+          placeholder="Enter student's solution process (one step per line)"
           className="textarea-input"
         />
       </div>
       <button onClick={handleAnalysis} disabled={loading} className="submit-btn">
-        {loading ? '分析中...' : '分析步骤'}
+        {loading ? 'Analyzing...' : 'Analyze Steps'}
       </button>
 
       {result && (
@@ -98,34 +98,34 @@ export default function StepAnalysis() {
               className={`tab-btn ${activeTab === 'student-steps' ? 'active' : ''}`}
               onClick={() => setActiveTab('student-steps')}
             >
-              学生解题步骤
+              Student's Steps
             </button>
             <button
               className={`tab-btn ${activeTab === 'correct-steps' ? 'active' : ''}`}
               onClick={() => setActiveTab('correct-steps')}
             >
-              RAG正确步骤
+              RAG Correct Steps
             </button>
             <button
               className={`tab-btn ${activeTab === 'error-analysis' ? 'active' : ''}`}
               onClick={() => setActiveTab('error-analysis')}
             >
-              错误分析
+              Error Analysis
             </button>
             <button
               className={`tab-btn ${activeTab === 'suggestions' ? 'active' : ''}`}
               onClick={() => setActiveTab('suggestions')}
             >
-              教学建议
+              Teaching Suggestions
             </button>
           </div>
 
           <div className={`tab-content ${activeTab === 'student-steps' ? 'active' : ''}`}>
-            <h3>📝 学生解题步骤分析</h3>
+            <h3>📝 Student's Solution Steps Analysis</h3>
             <div className="steps-list">
               {result.student_steps.map((step, index) => (
                 <div key={index} className={`step-item ${step.is_correct ? 'correct' : 'wrong'}`}>
-                  <span className="step-number">步骤{step.step_number}</span>
+                  <span className="step-number">Step {step.step_number}</span>
                   <span className="step-content">{step.content}</span>
                   <span className="step-status">{step.is_correct ? '✓' : '✗'}</span>
                   {!step.is_correct && (
@@ -135,7 +135,7 @@ export default function StepAnalysis() {
               ))}
             </div>
             <div className="knowledge-summary">
-              <h4>涉及知识点</h4>
+              <h4>Involved Knowledge Points</h4>
               {result.knowledge_points.map((point, index) => (
                 <span key={index} className="tag">{point}</span>
               ))}
@@ -143,14 +143,14 @@ export default function StepAnalysis() {
           </div>
 
           <div className={`tab-content ${activeTab === 'correct-steps' ? 'active' : ''}`}>
-            <h3>📚 RAG知识库 - 正确解题方法</h3>
+            <h3>📚 RAG Knowledge Base - Correct Solution Method</h3>
             <div className="method-info">
-              <strong>🔧 正确解题方法：</strong>{result.correct_method}
+              <strong>🔧 Correct Method:</strong> {result.correct_method}
             </div>
             <div className="steps-list expected">
               {result.correct_steps.map((step, index) => (
                 <div key={index} className="step-item">
-                  <span className="step-number">步骤{index + 1}</span>
+                  <span className="step-number">Step {index + 1}</span>
                   <span className="step-content">{step}</span>
                 </div>
               ))}
@@ -158,23 +158,23 @@ export default function StepAnalysis() {
           </div>
 
           <div className={`tab-content ${activeTab === 'error-analysis' ? 'active' : ''}`}>
-            <h3>🔍 错误深度分析</h3>
+            <h3>🔍 Error Deep Analysis</h3>
             <div className="error-summary">
               <div className="error-item">
-                <span className="label">错误类型：</span>
+                <span className="label">Error Type:</span>
                 <span className="value error">{result.error_type}</span>
               </div>
               <div className="error-item">
-                <span className="label">错误位置：</span>
-                <span className="value">第{result.error_step_index + 1}步</span>
+                <span className="label">Error Location:</span>
+                <span className="value">Step {result.error_step_index + 1}</span>
               </div>
               <div className="error-item">
-                <span className="label">错误原因：</span>
+                <span className="label">Error Reason:</span>
                 <span className="value">{result.error_reason}</span>
               </div>
             </div>
             <div className="common-mistakes">
-              <h4>📊 常见错误参考（来自RAG知识库）</h4>
+              <h4>📊 Common Mistakes Reference (from RAG)</h4>
               {result.common_mistakes.map((item, index) => (
                 <div key={index} className="mistake-item">
                   <strong>{index + 1}. {item.mistake}</strong>
@@ -185,17 +185,17 @@ export default function StepAnalysis() {
           </div>
 
           <div className={`tab-content ${activeTab === 'suggestions' ? 'active' : ''}`}>
-            <h3>🎯 教学与学习建议</h3>
+            <h3>🎯 Teaching and Learning Suggestions</h3>
             <div className="teaching-card">
-              <h4>👨‍🏫 教师教学建议</h4>
+              <h4>👨‍🏫 Teacher Suggestions</h4>
               <p>{result.teaching_suggestions}</p>
             </div>
             <div className="learning-card">
-              <h4>📖 学生学习建议</h4>
+              <h4>📖 Student Learning Tips</h4>
               <p>{result.learning_tips}</p>
             </div>
             <div className="resources-card">
-              <h4>📚 推荐学习资源</h4>
+              <h4>📚 Recommended Resources</h4>
               <ul>
                 {result.related_resources.map((resource, index) => (
                   <li key={index}>{resource}</li>

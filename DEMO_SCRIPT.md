@@ -1,143 +1,143 @@
-# ExamGrader 演示视频脚本
+# ExamGrader Demo Video Script
 
-## 视频概述
-- **时长**: 约3分钟
-- **风格**: 专业、清晰、有节奏感
-- **目标受众**: 教育工作者、学校管理者、技术决策者
-
----
-
-## 分镜脚本
-
-### 镜头1: 开场介绍 (0:00 - 0:15)
-| 画面 | 旁白 | 字幕 |
-|------|------|------|
-| 屏幕显示 ExamGrader Logo，背景为渐变色 | "大家好，欢迎来到 ExamGrader 智能试卷批改系统的功能演示。" | ExamGrader - 智能试卷批改系统 |
-| Logo 渐入，展示核心功能图标 | "ExamGrader 是一个基于人工智能的教育解决方案，实现试卷自动批改、错题智能分析和个性化复习建议的完整学习闭环。" | 智能批改 · 错题分析 · 个性复习 |
-
-### 镜头2: 上传试卷 (0:15 - 0:45)
-| 画面 | 旁白 | 字幕 |
-|------|------|------|
-| 切换到 Web 界面，显示"上传试卷"页面 | "首先，让我们来上传一份试卷。" | 📤 上传试卷 |
-| 演示者点击文件选择按钮，选择一份试卷文件 | "系统支持多种文件格式，包括 PDF、Word 和文本文件。" | 支持 PDF、Word、TXT |
-| 填写试卷信息：试卷ID、标题、科目 | "填写试卷的基本信息，包括唯一标识、标题和科目。" | 试卷ID · 标题 · 科目 |
-| 点击"上传试卷"按钮，显示成功提示 | "点击上传，试卷就成功保存到系统中了。" | ✅ 上传成功 |
-
-### 镜头3: 试卷批改 (0:45 - 1:30)
-| 画面 | 旁白 | 字幕 |
-|------|------|------|
-| 切换到"试卷批改"页面 | "接下来是核心功能——智能试卷批改。" | ✏️ 试卷批改 |
-| 输入试卷ID和学生ID | "输入要批改的试卷ID和学生ID。" | 试卷ID · 学生ID |
-| 输入学生答案（JSON格式） | "输入学生的答案，可以是JSON格式或直接上传答题文件。" | 学生答案 |
-| 点击"开始批改"按钮，显示加载动画 | "点击开始批改，AI会自动分析每一道题目。" | 🤖 AI智能批改中... |
-| 显示批改结果：得分、正确率、详细分析 | "批改完成！系统给出了总分、正确率，以及每道题的详细分析。" | 得分: 85/100 · 正确率: 85% |
-| 展示错题详情：错误原因、知识点标签 | "对于错题，系统会标注错误原因和涉及的知识点。" | ❌ 错误原因 · 知识点 |
-
-### 镜头4: 错题本 (1:30 - 2:00)
-| 画面 | 旁白 | 字幕 |
-|------|------|------|
-| 切换到"错题本"页面 | "系统会自动收集学生的错题，形成个人错题本。" | 📚 错题本 |
-| 展示错题列表，按时间排序 | "错题按时间顺序排列，方便学生复习。" | 按时间排序 |
-| 点击某道错题，展开详情 | "每道错题都包含题目内容、学生答案和正确答案的对比。" | 答案对比 |
-| 展示难度标签和知识点标签 | "系统还会标注题目的难度等级和相关知识点。" | 难度: 中等 · 知识点 |
-
-### 镜头5: 复习建议 (2:00 - 2:30)
-| 画面 | 旁白 | 字幕 |
-|------|------|------|
-| 切换到"复习建议"页面 | "基于错题分析，系统会生成个性化的复习建议。" | 🎯 复习建议 |
-| 点击"获取建议"按钮 | "点击获取建议，AI会分析学生的薄弱环节。" | 分析薄弱环节 |
-| 展示知识点分析图表 | "系统会展示知识点掌握情况的分析。" | 📊 知识点分析 |
-| 展示薄弱知识点列表 | "识别出需要重点复习的薄弱知识点。" | ⚠️ 薄弱知识点 |
-| 展示复习建议和学习计划 | "给出针对性的复习建议和学习计划。" | 💡 复习建议 · 📅 学习计划 |
-
-### 镜头6: 检查卷生成 (2:30 - 3:00)
-| 画面 | 旁白 | 字幕 |
-|------|------|------|
-| 切换到"检查卷"页面 | "最后，系统可以根据学生的薄弱环节生成个性化检查卷。" | 📝 检查卷生成 |
-| 输入题目数量，点击"生成检查卷" | "设置题目数量，系统会自动生成针对性的题目。" | 题目数量: 10道 |
-| 展示生成的检查卷 | "检查卷包含多种题型，涵盖学生需要加强的知识点。" | 个性化检查卷 |
-| 展示每道题的参考答案和知识点 | "每道题都附有参考答案和考察的知识点。" | 参考答案 · 知识点 |
-
-### 镜头7: 结尾 (3:00 - 3:15)
-| 画面 | 旁白 | 字幕 |
-|------|------|------|
-| 回到 ExamGrader Logo 页面 | "以上就是 ExamGrader 的核心功能演示。" | ExamGrader |
-| 展示技术架构图 | "ExamGrader 基于 OPEA 组件构建，支持大规模部署。" | 基于 OPEA 构建 |
-| 显示联系方式 | "感谢观看！如需了解更多信息，请联系我们。" | 谢谢观看！ |
+## Video Overview
+- **Duration**: Approximately 3 minutes
+- **Style**: Professional, clear, rhythmic
+- **Target Audience**: Educators, school administrators, technical decision makers
 
 ---
 
-## 录制指南
+## Scene Script
 
-### 准备工作
-1. **环境准备**
-   - 启动 LLM Service (vLLM)
-   - 启动 Embedding Service
-   - 启动 PostgreSQL + pgvector
-   - 启动 Agent Service
-   - 启动 API Service
-   - 启动 Web UI
+### Scene 1: Opening Introduction (0:00 - 0:15)
+| Screen | Narration | Subtitles |
+|--------|----------|-----------|
+| Screen shows ExamGrader Logo, gradient background | "Hello everyone, welcome to the ExamGrader Intelligent Exam Grading System feature demonstration." | ExamGrader - Intelligent Exam Grading System |
+| Logo fades in, displaying core feature icons | "ExamGrader is an AI-based education solution that achieves automated exam grading, intelligent wrong question analysis, and personalized review suggestions in a complete learning closed loop." | Smart Grading · Wrong Question Analysis · Personalized Review |
 
-2. **测试数据准备**
-   - 准备一份示例试卷（包含选择题、填空题、问答题）
-   - 准备一份学生答案
-   - 确保数据库中有测试数据
+### Scene 2: Upload Exam Paper (0:15 - 0:45)
+| Screen | Narration | Subtitles |
+|--------|----------|-----------|
+| Switch to Web interface, showing "Upload Exam" page | "First, let's upload an exam paper." | 📤 Upload Exam |
+| Presenter clicks file selection button, selects an exam file | "The system supports multiple file formats, including PDF, Word, and text files." | Supports PDF, Word, TXT |
+| Fill in exam information: Exam ID, title, subject | "Fill in basic exam information, including unique identifier, title, and subject." | Exam ID · Title · Subject |
+| Click "Upload Exam" button, showing success prompt | "Click upload, and the exam paper is successfully saved in the system." | ✅ Upload Successful |
 
-3. **录制工具**
-   - 屏幕录制软件（如 OBS Studio、Camtasia）
-   - 麦克风（确保音质清晰）
-   - 演示者准备
+### Scene 3: Exam Grading (0:45 - 1:30)
+| Screen | Narration | Subtitles |
+|--------|----------|-----------|
+| Switch to "Exam Grading" page | "Next is the core feature - Intelligent Exam Grading." | ✏️ Exam Grading |
+| Enter Exam ID and Student ID | "Enter the Exam ID and Student ID to grade." | Exam ID · Student ID |
+| Enter student answers (JSON format) | "Enter student answers, can be in JSON format or upload answer file directly." | Student Answers |
+| Click "Start Grading" button, showing loading animation | "Click start grading, AI will automatically analyze each question." | 🤖 AI Intelligent Grading... |
+| Display grading results: score, accuracy, detailed analysis | "Grading complete! The system provides total score, accuracy rate, and detailed analysis for each question." | Score: 85/100 · Accuracy: 85% |
+| Show wrong question details: error reasons, knowledge point tags | "For wrong questions, the system marks error reasons and involved knowledge points." | ❌ Error Reasons · Knowledge Points |
 
-### 录制步骤
-1. 打开浏览器，访问 Web UI (http://localhost:5173)
-2. 按照脚本顺序演示每个功能
-3. 注意操作速度，确保观众能看清
-4. 录制时可以先不录制旁白，后期添加
-5. 确保每个功能演示完整
+### Scene 4: Wrong Question Book (1:30 - 2:00)
+| Screen | Narration | Subtitles |
+|--------|----------|-----------|
+| Switch to "Wrong Question Book" page | "The system automatically collects student wrong questions, forming a personal wrong question notebook." | 📚 Wrong Question Book |
+| Display wrong question list, sorted by time | "Wrong questions are sorted chronologically for easy student review." | Sorted by Time |
+| Click on a wrong question to expand details | "Each wrong question includes question content, student answer, and correct answer comparison." | Answer Comparison |
+| Display difficulty tags and knowledge point tags | "The system also tags question difficulty levels and related knowledge points." | Difficulty: Medium · Knowledge Points |
 
-### 后期制作
-1. 添加背景音乐（轻柔的背景音乐）
-2. 添加旁白解说
-3. 添加字幕
-4. 添加转场效果
-5. 调整视频节奏
-6. 导出为 MP4 格式
+### Scene 5: Review Suggestions (2:00 - 2:30)
+| Screen | Narration | Subtitles |
+|--------|----------|-----------|
+| Switch to "Review Suggestions" page | "Based on wrong question analysis, the system generates personalized review suggestions." | 🎯 Review Suggestions |
+| Click "Get Suggestions" button | "Click get suggestions, AI will analyze student weak areas." | Analyzing Weak Areas |
+| Display knowledge point analysis chart | "The system displays knowledge point mastery analysis." | 📊 Knowledge Point Analysis |
+| Display weak knowledge point list | "Identifies weak knowledge points that need key review." | ⚠️ Weak Knowledge Points |
+| Display review suggestions and learning plan | "Provides targeted review suggestions and learning plan." | 💡 Review Suggestions · 📅 Learning Plan |
+
+### Scene 6: Check Paper Generation (2:30 - 3:00)
+| Screen | Narration | Subtitles |
+|--------|----------|-----------|
+| Switch to "Check Paper" page | "Finally, the system can generate personalized check papers based on student weak areas." | 📝 Check Paper Generation |
+| Enter number of questions, click "Generate Check Paper" | "Set the number of questions, and the system will automatically generate targeted questions." | Number of Questions: 10 |
+| Display generated check paper | "The check paper includes various question types, covering knowledge points students need to strengthen." | Personalized Check Paper |
+| Display reference answers and knowledge points for each question | "Each question comes with reference answer and knowledge points examined." | Reference Answer · Knowledge Points |
+
+### Scene 7: Closing (3:00 - 3:15)
+| Screen | Narration | Subtitles |
+|--------|----------|-----------|
+| Return to ExamGrader Logo page | "Above are the core feature demonstrations of ExamGrader." | ExamGrader |
+| Display technical architecture diagram | "ExamGrader is built on OPEA components, supporting large-scale deployment." | Built on OPEA |
+| Display contact information | "Thank you for watching! For more information, please contact us." | Thank You! |
 
 ---
 
-## 演示数据示例
+## Recording Guide
 
-### 试卷内容示例
+### Preparation
+1. **Environment Setup**
+   - Start LLM Service (vLLM)
+   - Start Embedding Service
+   - Start PostgreSQL + pgvector
+   - Start Agent Service
+   - Start API Service
+   - Start Web UI
+
+2. **Test Data Preparation**
+   - Prepare a sample exam (including multiple choice, fill-in-the-blank, essay questions)
+   - Prepare a student answer sheet
+   - Ensure test data exists in the database
+
+3. **Recording Tools**
+   - Screen recording software (such as OBS Studio, Camtasia)
+   - Microphone (ensure clear audio quality)
+   - Presenter preparation
+
+### Recording Steps
+1. Open browser, access Web UI (http://localhost:5173)
+2. Demonstrate each feature in script order
+3. Pay attention to operation speed, ensure audience can see clearly
+4. Can record without narration first, add later in post-production
+5. Ensure each feature demonstration is complete
+
+### Post-Production
+1. Add background music (soft background music)
+2. Add narration
+3. Add subtitles
+4. Add transition effects
+5. Adjust video rhythm
+6. Export as MP4 format
+
+---
+
+## Demo Data Examples
+
+### Exam Content Example
 ```
-试卷ID: math_test_001
-标题: 高中数学期中考试
-科目: 数学
+Exam ID: math_test_001
+Title: High School Math Midterm Exam
+Subject: Math
 
-1. 选择题（每题5分）
-   1.1 已知函数 f(x) = x² + 2x + 1，则 f(2) = ?
+1. Multiple Choice (5 points each)
+   1.1 Given function f(x) = x² + 2x + 1, then f(2) = ?
       A. 5 B. 8 C. 9 D. 10
    
-2. 填空题（每题5分）
-   2.1 等差数列 1, 3, 5, 7, ... 的第10项是 ____
+2. Fill-in-the-blank (5 points each)
+   2.1 The 10th term of arithmetic sequence 1, 3, 5, 7, ... is ____
 
-3. 解答题（每题20分）
-   3.1 求函数 y = x³ - 3x² + 2 的极值点
+3. Essay Questions (20 points each)
+   3.1 Find the extreme points of function y = x³ - 3x² + 2
 ```
 
-### 学生答案示例
+### Student Answer Example
 ```json
 {
   "question_1": "C",
   "question_2": "19",
-  "question_3": "对函数求导得 y' = 3x² - 6x = 3x(x-2)，令 y' = 0，得 x = 0 或 x = 2。当 x = 0 时取得极大值，当 x = 2 时取得极小值。"
+  "question_3": "Differentiating the function gives y' = 3x² - 6x = 3x(x-2), set y' = 0, get x = 0 or x = 2. When x = 0, get maximum value, when x = 2, get minimum value."
 }
 ```
 
 ---
 
-## 注意事项
-1. 演示时确保网络连接稳定
-2. 提前测试所有功能，避免演示时出错
-3. 保持操作流畅，不要有过多停顿
-4. 旁白要清晰、专业，语速适中
-5. 字幕要准确、简洁
+## Notes
+1. Ensure stable network connection during demonstration
+2. Test all features in advance to avoid errors during demonstration
+3. Keep operations smooth without too many pauses
+4. Narration should be clear, professional, moderate speaking speed
+5. Subtitles should be accurate and concise

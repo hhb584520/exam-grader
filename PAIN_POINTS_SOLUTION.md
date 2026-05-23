@@ -1,272 +1,272 @@
-# ExamGrader 痛点解决方案功能说明
+# ExamGrader Pain Points Solution Feature Documentation
 
-## 📋 项目概述
+## Project Overview
 
-ExamGrader 是一个基于AI和RAG技术的智能试卷批改系统，针对教育场景中的四大痛点，提供了完整的解决方案，实现了从试卷批改到个性化学习推荐的完整闭环。
+ExamGrader is an intelligent exam grading system based on AI and RAG technology, providing complete solutions for the four major pain points in educational scenarios, and achieving a complete closed loop from exam grading to personalized learning recommendations.
 
 ---
 
-## 🎯 四大痛点及解决方案
+## Four Pain Points and Solutions
 
-### 痛点一：老师批改作业量大
+### Pain Point 1: Heavy Teacher Workload for Grading
 
-**问题描述：**
-- 传统批改方式效率低，只能关注答案对错
-- 批改过程缺乏详细反馈
-- 无法深入分析学生解题步骤
+**Problem Description:**
+- Traditional grading methods are inefficient, focusing only on answer correctness
+- Grading process lacks detailed feedback
+- Unable to deeply analyze student problem-solving steps
 
-**解决方案：AI + RAG精细化批改**
+**Solution: AI + RAG Refined Grading**
 
-#### 核心功能
-1. **步骤级批改**
-   - 不仅关注答案，更关注解题步骤
-   - 自动识别错误步骤位置
-   - 分析错误类型和原因
+#### Core Features
+1. **Step-level Grading**
+   - Focus on both answers and problem-solving steps
+   - Automatically identify error step locations
+   - Analyze error types and causes
 
-2. **智能批改模板**
-   - 支持批改模板存储（`grading_templates`表）
-   - 自动应用评分规则
-   - 生成标准化评语
+2. **Intelligent Grading Templates**
+   - Support grading template storage (`grading_templates` table)
+   - Automatically apply scoring rules
+   - Generate standardized comments
 
-3. **批量处理**
-   - 支持批量上传试卷
-   - 并行批改处理
-   - 自动生成批改报告
+3. **Batch Processing**
+   - Support batch upload of exam papers
+   - Parallel grading processing
+   - Automatically generate grading reports
 
-#### 技术实现
+#### Technical Implementation
 ```python
-# 数据库表：grading_templates
+# Database table: grading_templates
 CREATE TABLE grading_templates (
     template_id TEXT UNIQUE,
     subject TEXT,
     question_type TEXT,
-    scoring_rules TEXT,        # 评分规则
-    step_scoring TEXT,         # 步骤评分
-    common_errors TEXT,        # 常见错误
-    auto_comments TEXT         # 自动评语
+    scoring_rules TEXT,        # Scoring rules
+    step_scoring TEXT,         # Step scoring
+    common_errors TEXT,        # Common errors
+    auto_comments TEXT         # Auto comments
 );
 ```
 
-#### 效果提升
-- ⏱️ 批改效率提升 **60%**
-- 📊 步骤分析准确率 **85%**
-- 💬 反馈详细度提升 **3倍**
+#### Performance Improvement
+- ⏱️ Grading efficiency improved by **60%**
+- 📊 Step analysis accuracy **85%**
+- 💬 Feedback detail improved by **3x**
 
 ---
 
-### 痛点二：错题没有得到有效整理，容易再错，学生不知道为何错
+### Pain Point 2: Wrong Questions Not Effectively Organized, Easy to Repeat Mistakes, Students Don't Know Why They Made Mistakes
 
-**问题描述：**
-- 错题整理缺乏系统性
-- 学生不理解错误原因
-- 缺乏针对性练习
+**Problem Description:**
+- Lack of systematic organization for wrong questions
+- Students don't understand the reasons for errors
+- Lack of targeted practice
 
-**解决方案：AI + RAG错题分析与优化方法推荐**
+**Solution: AI + RAG Wrong Question Analysis and Optimized Method Recommendations**
 
-#### 核心功能
-1. **智能错题收集**
-   - 自动收集错题到错题库
-   - 关联知识点和难度
-   - 记录错误类型和频率
+#### Core Features
+1. **Intelligent Wrong Question Collection**
+   - Automatically collect wrong questions into the wrong question bank
+   - Associate knowledge points and difficulty levels
+   - Record error types and frequency
 
-2. **步骤级错误分析**
-   - 识别具体错误步骤
-   - 分析错误原因（概念错误、计算错误、逻辑错误等）
-   - 提供错误避免方法
+2. **Step-level Error Analysis**
+   - Identify specific error steps
+   - Analyze error reasons (concept errors, calculation errors, logic errors, etc.)
+   - Provide error prevention methods
 
-3. **优化方法推荐**
-   - 推荐更优解题方法
-   - 提供快捷技巧
-   - 方法对比分析
+3. **Optimized Method Recommendations**
+   - Recommend better problem-solving methods
+   - Provide shortcut techniques
+   - Method comparison analysis
 
-#### 数据结构
+#### Data Structure
 ```python
-# 错题表增强字段
+# Enhanced fields in wrong question table
 {
     "step_analysis": {
-        "student_steps": [...],           # 学生解题步骤
-        "error_step_index": 2,            # 错误步骤索引
-        "error_type": "计算错误",          # 错误类型
-        "error_reason": "..."             # 错误原因
+        "student_steps": [...],           # Student problem-solving steps
+        "error_step_index": 2,            # Error step index
+        "error_type": "Calculation Error",          # Error type
+        "error_reason": "..."             # Error reason
     },
-    "optimized_methods": [                # 优化方法
+    "optimized_methods": [                # Optimized methods
         {
-            "method_name": "导数符号表法",
-            "advantages": ["无需二阶导数", "步骤更少"],
-            "efficiency_gain": "节省30%时间"
+            "method_name": "Derivative Sign Table Method",
+            "advantages": ["No second derivative needed", "Fewer steps"],
+            "efficiency_gain": "Saves 30% time"
         }
     ],
-    "shortcut_techniques": [...]          # 快捷技巧
+    "shortcut_techniques": [...]          # Shortcut techniques
 }
 ```
 
-#### 效果提升
-- 📚 错题整理效率提升 **80%**
-- 🎯 错误定位准确率 **90%**
-- 📈 错题再错率降低 **50%**
+#### Performance Improvement
+- 📚 Wrong question organization efficiency improved by **80%**
+- 🎯 Error location accuracy **90%**
+- 📈 Wrong question repeat rate reduced by **50%**
 
 ---
 
-### 痛点三：老师和学生考前复习没有重点，不能有针对性
+### Pain Point 3: Teachers and Students Have No Focus for Pre-Exam Review, Cannot Be Targeted
 
-**问题描述：**
-- 复习缺乏针对性
-- 不知道重点在哪里
-- 复习效率低下
+**Problem Description:**
+- Lack of targeted review approach
+- Don't know where the key points are
+- Low review efficiency
 
-**解决方案：智能复习重点提取 + 个性化检查卷生成**
+**Solution: Intelligent Review Focus Extraction + Personalized Check Paper Generation**
 
-#### 核心功能
-1. **高考真题分析**
-   - 分析历年高考真题
-   - 提取高频知识点
-   - 对比学生掌握情况
+#### Core Features
+1. **College Entrance Exam Analysis**
+   - Analyze historical college entrance exam papers
+   - Extract high-frequency knowledge points
+   - Compare student mastery situation
 
-2. **知识点掌握度分析**
-   - 实时更新掌握度
-   - 识别薄弱知识点
-   - 生成复习优先级
+2. **Knowledge Point Mastery Analysis**
+   - Real-time mastery updates
+   - Identify weak knowledge points
+   - Generate review priorities
 
-3. **个性化检查卷生成**
-   - 基于薄弱知识点生成
-   - 难度自适应
-   - 一学生一卷
+3. **Personalized Check Paper Generation**
+   - Generate based on weak knowledge points
+   - Adaptive difficulty
+   - One student, one paper
 
-4. **考前复习计划**
-   - 智能制定复习计划
-   - 合理分配时间
-   - 设置检查点
+4. **Pre-exam Review Plan**
+   - Smart review plan creation
+   - Rational time allocation
+   - Set checkpoints
 
-#### 数据库设计
+#### Database Design
 ```sql
--- 高考真题库
+-- College entrance exam archive
 CREATE TABLE exam_papers_archive (
     year INTEGER,
     province TEXT,
     subject TEXT,
-    knowledge_points TEXT,        # 知识点分布
-    difficulty_distribution TEXT  # 难度分布
+    knowledge_points TEXT,        # Knowledge point distribution
+    difficulty_distribution TEXT  # Difficulty distribution
 );
 
--- 知识点掌握度
+-- Knowledge point mastery
 CREATE TABLE knowledge_mastery (
     student_id TEXT,
     knowledge_point_id TEXT,
-    mastery_level FLOAT,          # 掌握度 0-1
-    practice_count INTEGER,       # 练习次数
-    correct_count INTEGER         # 正确次数
+    mastery_level FLOAT,          # Mastery level 0-1
+    practice_count INTEGER,       # Practice count
+    correct_count INTEGER         # Correct count
 );
 
--- 复习计划
+-- Review plans
 CREATE TABLE review_plans (
     student_id TEXT,
     plan_type TEXT,
-    target_knowledge_points TEXT, # 目标知识点
-    daily_tasks TEXT,             # 每日任务
-    progress FLOAT                # 进度
+    target_knowledge_points TEXT, # Target knowledge points
+    daily_tasks TEXT,             # Daily tasks
+    progress FLOAT                # Progress
 );
 ```
 
-#### 效果提升
-- 🎯 复习针对性提升 **70%**
-- 📊 知识点覆盖率 **95%**
-- ⏰ 复习效率提升 **50%**
+#### Performance Improvement
+- 🎯 Review targeting improved by **70%**
+- 📊 Knowledge point coverage **95%**
+- ⏰ Review efficiency improved by **50%**
 
 ---
 
-### 痛点四：每个人薄弱点不一样，无法有针对性的加强
+### Pain Point 4: Everyone Has Different Weak Points, Cannot Be Strengthened in a Targeted Way
 
-**问题描述：**
-- 学习资料千篇一律
-- 无法针对个人薄弱点
-- 学习效果难以评估
+**Problem Description:**
+- Learning materials are one-size-fits-all
+- Unable to target individual weak points
+- Difficult to evaluate learning effectiveness
 
-**解决方案：RAG学习资料库 + 智能推荐 + 资料评分**
+**Solution: RAG Learning Material Library + Smart Recommendations + Material Ratings**
 
-#### 核心功能
-1. **学习资料库**
-   - 支持多种资料类型（视频、动画、文档、练习）
-   - 关联知识点和难度
-   - 支持向量检索
+#### Core Features
+1. **Learning Material Library**
+   - Support multiple material types (videos, animations, documents, exercises)
+   - Associate knowledge points and difficulty levels
+   - Support vector retrieval
 
-2. **智能资料推荐**
-   - 基于薄弱知识点推荐
-   - 考虑学习风格
-   - 提供学习顺序建议
+2. **Smart Material Recommendations**
+   - Recommend based on weak knowledge points
+   - Consider learning styles
+   - Provide learning sequence suggestions
 
-3. **资料评分系统**
-   - 学生评分反馈
-   - 学习效果评估
-   - 资料质量统计
+3. **Material Rating System**
+   - Student rating feedback
+   - Learning effectiveness evaluation
+   - Material quality statistics
 
-4. **学习效果追踪**
-   - 记录学习时长
-   - 评估学习成果
-   - 更新掌握度
+4. **Learning Effectiveness Tracking**
+   - Record learning duration
+   - Evaluate learning outcomes
+   - Update mastery levels
 
-#### 数据库设计
+#### Database Design
 ```sql
--- 学习资料库
+-- Learning material library
 CREATE TABLE learning_materials (
     material_id TEXT UNIQUE,
     title TEXT,
     material_type TEXT,            # video/animation/document/exercise
-    knowledge_points TEXT,         # 关联知识点
-    effectiveness_score FLOAT,     # 效果评分
-    avg_rating FLOAT               # 平均评分
+    knowledge_points TEXT,         # Associated knowledge points
+    effectiveness_score FLOAT,     # Effectiveness score
+    avg_rating FLOAT               # Average rating
 );
 
--- 资料评分
+-- Material ratings
 CREATE TABLE material_ratings (
     material_id TEXT,
     student_id TEXT,
-    rating INTEGER,                # 1-5星
-    effectiveness_score FLOAT,     # 学习效果分
-    learning_outcome TEXT,         # 学习成果
-    time_spent_minutes INTEGER     # 学习时长
+    rating INTEGER,                # 1-5 stars
+    effectiveness_score FLOAT,     # Learning effectiveness score
+    learning_outcome TEXT,         # Learning outcome
+    time_spent_minutes INTEGER     # Learning duration
 );
 
--- 学生资料分配
+-- Student material assignments
 CREATE TABLE student_material_assignments (
     student_id TEXT,
     material_id TEXT,
-    assigned_by TEXT,              # 分配老师
+    assigned_by TEXT,              # Assigned teacher
     status TEXT,                   # assigned/completed
-    effectiveness_score FLOAT      # 学习效果
+    effectiveness_score FLOAT      # Learning effectiveness
 );
 ```
 
-#### API接口
+#### API Interfaces
 ```python
-# 推荐学习资料
+# Recommend learning materials
 POST /recommend_materials
 {
     "student_id": "student_001",
-    "material_type": "video"  # 可选
+    "material_type": "video"  # Optional
 }
 
-# 资料评分
+# Rate material
 POST /rate_material
 {
     "material_id": "MAT-VIDEO-001",
     "student_id": "student_001",
     "rating": 4,
     "effectiveness_score": 85,
-    "learning_outcome": "掌握了导数极值判断方法",
+    "learning_outcome": "Mastered derivative extreme value judgment method",
     "time_spent": 18
 }
 ```
 
-#### 效果提升
-- 🎯 资料推荐准确率 **85%**
-- 📚 学习效率提升 **40%**
-- ⭐ 资料满意度 **4.5/5.0**
+#### Performance Improvement
+- 🎯 Material recommendation accuracy **85%**
+- 📚 Learning efficiency improved by **40%**
+- ⭐ Material satisfaction **4.5/5.0**
 
 ---
 
-## 🏗️ 系统架构
+## System Architecture
 
-### 微服务架构
+### Microservice Architecture
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                     Web Frontend                         │
@@ -290,150 +290,150 @@ POST /rate_material
 └──────────────┴──────────────┴──────────────────────────┘
 ```
 
-### 数据流
+### Data Flow
 ```
-1. 上传试卷 → 解析 → 存储
-2. 提交答案 → 批改 → 步骤分析 → 错题收集
-3. 错题分析 → RAG检索 → 优化方法推荐
-4. 薄弱点分析 → 资料推荐 → 学习 → 评分
-5. 高考真题分析 → 知识点对比 → 复习计划
+1. Upload exam → Parse → Store
+2. Submit answers → Grade → Step analysis → Wrong question collection
+3. Wrong question analysis → RAG retrieval → Optimized method recommendation
+4. Weak point analysis → Material recommendation → Learning → Rating
+5. College entrance exam analysis → Knowledge point comparison → Review plan
 ```
 
 ---
 
-## 📊 功能对比表
+## Feature Comparison Table
 
-| 功能 | 传统方式 | ExamGrader | 提升效果 |
-|------|---------|-----------|---------|
-| 批改方式 | 只看答案 | 步骤级批改 | 效率+60% |
-| 错题整理 | 手动整理 | 自动收集分析 | 效率+80% |
-| 错误分析 | 笼统反馈 | 精确定位+方法推荐 | 准确率+90% |
-| 复习重点 | 凭经验 | 数据驱动 | 针对性+70% |
-| 学习资料 | 千篇一律 | 个性化推荐 | 效率+40% |
-| 学习效果 | 难以评估 | 实时追踪 | 可视化 |
-
----
-
-## 🚀 使用指南
-
-### 1. 教师端使用流程
-
-#### 批改作业
-1. 上传试卷模板
-2. 学生提交答案
-3. 系统自动批改（含步骤分析）
-4. 查看批改报告和教学建议
-
-#### 上传学习资料
-1. 进入"资料管理"页面
-2. 填写资料信息（标题、类型、知识点等）
-3. 上传资料文件或链接
-4. 系统自动向量化存储
-
-#### 查看班级分析
-1. 选择班级和学科
-2. 查看整体表现和常见错误
-3. 获取教学改进建议
-4. 制定教学计划
-
-### 2. 学生端使用流程
-
-#### 查看错题
-1. 进入"错题本"页面
-2. 查看错题列表和步骤分析
-3. 学习优化方法和快捷技巧
-4. 完成针对性练习
-
-#### 学习资料
-1. 进入"资料推荐"页面
-2. 查看推荐的学习资料
-3. 开始学习
-4. 完成后评分反馈
-
-#### 考前复习
-1. 进入"真题分析"页面
-2. 查看高频知识点和掌握情况
-3. 生成复习计划
-4. 按计划复习
+| Feature | Traditional Method | ExamGrader | Improvement |
+|---------|-------------------|------------|-------------|
+| Grading Method | Answer only | Step-level grading | Efficiency +60% |
+| Wrong Question Organization | Manual | Auto collection & analysis | Efficiency +80% |
+| Error Analysis | General feedback | Precise location + method recommendation | Accuracy +90% |
+| Review Focus | Experience-based | Data-driven | Targeting +70% |
+| Learning Materials | One-size-fits-all | Personalized recommendations | Efficiency +40% |
+| Learning Effectiveness | Difficult to evaluate | Real-time tracking | Visualization |
 
 ---
 
-## 📈 效果评估
+## User Guide
 
-### 量化指标
+### 1. Teacher Side Workflow
 
-| 指标 | 实施前 | 实施后 | 提升幅度 |
-|------|-------|-------|---------|
-| 批改时间 | 2小时/班 | 0.8小时/班 | ↓60% |
-| 错题再错率 | 45% | 22% | ↓51% |
-| 复习效率 | 基准 | +50% | ↑50% |
-| 学习效果 | 基准 | +40% | ↑40% |
-| 学生满意度 | 3.2/5.0 | 4.5/5.0 | ↑41% |
+#### Grade Assignments
+1. Upload exam template
+2. Students submit answers
+3. System automatically grades (with step analysis)
+4. View grading reports and teaching suggestions
 
-### 定性反馈
+#### Upload Learning Materials
+1. Go to "Material Management" page
+2. Fill in material information (title, type, knowledge points, etc.)
+3. Upload material file or link
+4. System automatically stores with vectorization
 
-**教师反馈：**
-- "批改效率大幅提升，可以花更多时间在教学设计上"
-- "能够准确了解每个学生的问题，教学更有针对性"
-- "资料推荐功能帮助学生找到最适合的学习资源"
+#### View Class Analysis
+1. Select class and subject
+2. View overall performance and common errors
+3. Get teaching improvement suggestions
+4. Develop teaching plans
 
-**学生反馈：**
-- "终于知道自己错在哪里，知道怎么改了"
-- "推荐的学习资料很有用，学习效率提高了"
-- "复习计划很科学，不再盲目复习"
+### 2. Student Side Workflow
 
----
+#### View Wrong Questions
+1. Go to "Wrong Question Book" page
+2. View wrong question list and step analysis
+3. Learn optimized methods and shortcut techniques
+4. Complete targeted practice
 
-## 🔮 未来规划
+#### Learning Materials
+1. Go to "Material Recommendation" page
+2. View recommended learning materials
+3. Start learning
+4. Provide rating feedback after completion
 
-### 短期目标（3个月）
-1. 完善前端组件开发
-2. 增加更多学科支持
-3. 优化推荐算法
-4. 提升系统性能
-
-### 中期目标（6个月）
-1. 支持更多题型
-2. 增加互动学习功能
-3. 开发移动端应用
-4. 建立教师协作平台
-
-### 长期目标（1年）
-1. 构建完整的教育生态
-2. 支持多语言
-3. AI教师助手
-4. 个性化学习路径
+#### Pre-exam Review
+1. Go to "Exam Analysis" page
+2. View high-frequency knowledge points and mastery situation
+3. Generate review plan
+4. Review according to plan
 
 ---
 
-## 📞 技术支持
+## Performance Evaluation
 
-- **项目地址：** c:\Users\huhai\Trae\exam-grader
-- **演示页面：** demo.html
-- **架构文档：** architecture.html
-- **API文档：** 参见 services/api/app.py
+### Quantitative Metrics
+
+| Metric | Before Implementation | After Implementation | Improvement |
+|--------|---------------------|---------------------|-------------|
+| Grading Time | 2 hours/class | 0.8 hours/class | ↓60% |
+| Wrong Question Repeat Rate | 45% | 22% | ↓51% |
+| Review Efficiency | Baseline | +50% | ↑50% |
+| Learning Effectiveness | Baseline | +40% | ↑40% |
+| Student Satisfaction | 3.2/5.0 | 4.5/5.0 | ↑41% |
+
+### Qualitative Feedback
+
+**Teacher Feedback:**
+- "Grading efficiency has greatly improved, allowing more time for teaching design"
+- "Able to accurately understand each student's problems, making teaching more targeted"
+- "Material recommendation feature helps students find the most suitable learning resources"
+
+**Student Feedback:**
+- "Finally know where I made mistakes and how to fix them"
+- "Recommended learning materials are very useful, improving learning efficiency"
+- "Review plan is very scientific, no longer blindly reviewing"
 
 ---
 
-## 📝 更新日志
+## Future Planning
+
+### Short-term Goals (3 months)
+1. Complete frontend component development
+2. Add support for more subjects
+3. Optimize recommendation algorithms
+4. Improve system performance
+
+### Medium-term Goals (6 months)
+1. Support more question types
+2. Add interactive learning features
+3. Develop mobile applications
+4. Build teacher collaboration platform
+
+### Long-term Goals (1 year)
+1. Build complete education ecosystem
+2. Multi-language support
+3. AI teaching assistant
+4. Personalized learning paths
+
+---
+
+## Technical Support
+
+- **Project Address:** c:\Users\huhai\Trae\exam-grader
+- **Demo Page:** demo.html
+- **Architecture Documentation:** architecture.html
+- **API Documentation:** See services/api/app.py
+
+---
+
+## Update Log
 
 ### v2.0.0 (2024-05-22)
-- ✨ 新增学习资料推荐功能
-- ✨ 新增资料评分系统
-- ✨ 新增高考真题分析
-- ✨ 新增考前复习计划
-- ✨ 新增知识点掌握度追踪
-- 🐛 修复步骤分析bug
-- 📝 完善文档和演示页面
+- ✨ Added learning material recommendation feature
+- ✨ Added material rating system
+- ✨ Added college entrance exam analysis
+- ✨ Added pre-exam review plan
+- ✨ Added knowledge point mastery tracking
+- 🐛 Fixed step analysis bugs
+- 📝 Improved documentation and demo page
 
 ### v1.0.0 (2024-05-20)
-- 🎉 初始版本发布
-- ✅ 试卷批改功能
-- ✅ 步骤级错误分析
-- ✅ 错题本管理
-- ✅ 复习建议生成
-- ✅ 检查卷生成
+- 🎉 Initial version released
+- ✅ Exam grading feature
+- ✅ Step-level error analysis
+- ✅ Wrong question book management
+- ✅ Review suggestion generation
+- ✅ Check paper generation
 
 ---
 
-**ExamGrader - 让教育更智能，让学习更高效！** 🎓
+**ExamGrader - Making Education Smarter, Making Learning More Efficient!** 🎓

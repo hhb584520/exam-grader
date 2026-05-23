@@ -1,139 +1,139 @@
-# ExamGrader 步骤级错误分析 - 优化方法推荐功能
+# ExamGrader Step-Level Error Analysis - Optimized Method Recommendation Feature
 
-## 功能概述
+## Feature Overview
 
-在原有的步骤级错误分析基础上，新增**优化方法推荐**功能，帮助学生：
-1. 拓展解题思维
-2. 掌握更简单、更高效的解题方法
-3. 提高解题效率
-4. 建立多角度思考问题的能力
+Building on the existing step-level error analysis, the new **Optimized Method Recommendation** feature helps students:
+1. Expand problem-solving thinking
+2. Master simpler and more efficient solving methods
+3. Improve problem-solving efficiency
+4. Build the ability to think about problems from multiple angles
 
-## 核心功能
+## Core Features
 
-### 1. 多方法推荐
-系统从RAG知识库中检索并推荐多种解题方法：
+### 1. Multiple Method Recommendations
+The system retrieves and recommends multiple solving methods from the RAG knowledge base:
 
-| 方法类型 | 特点 | 适用场景 |
-|---------|------|---------|
-| **标准方法** | 规范、通用 | 基础练习、考试 |
-| **图像法** | 直观、易懂 | 快速判断、验证答案 |
-| **快捷方法** | 高效、省时 | 选择题、时间有限 |
-| **技巧方法** | 技巧性强 | 提升数学思维 |
+| Method Type | Characteristics | Applicable Scenarios |
+|-------------|----------------|---------------------|
+| **Standard Method** | Standardized, universal | Basic practice, exams |
+| **Graphical Method** | Intuitive, easy to understand | Quick judgment, answer verification |
+| **Shortcut Method** | Efficient, time-saving | Multiple choice, time-limited |
+| **Trick Method** | High technique | Improve mathematical thinking |
 
-### 2. 方法对比
-系统自动对比学生使用的方法与推荐的最优方法：
+### 2. Method Comparison
+The system automatically compares student methods with recommended optimal methods:
 
-- **计算量对比**：分析不同方法的计算复杂度
-- **步骤数对比**：比较解题步骤的数量
-- **易错程度**：评估方法的出错风险
-- **效率提升**：量化效率改进
+- **Computation Comparison**: Analyze computational complexity of different methods
+- **Step Count Comparison**: Compare the number of problem-solving steps
+- **Error-prone Assessment**: Evaluate the error risk of methods
+- **Efficiency Improvement**: Quantify efficiency improvements
 
-### 3. 快捷技巧
-提供实用的解题技巧：
+### 3. Shortcut Techniques
+Provides practical problem-solving techniques:
 
-- **导数分解技巧**：如何快速分解因式
-- **数轴标记法**：用穿针引线法判断符号
-- **速判极值类型**：无需二阶导数的判断方法
+- **Derivative Decomposition Technique**: How to quickly factor expressions
+- **Number Line Marking Method**: Use the wave method to determine sign changes
+- **Quick Extreme Value Type Judgment**: Methods that don't require second derivatives
 
-## 技术实现
+## Technical Implementation
 
-### 数据库增强
+### Database Enhancement
 ```sql
--- knowledge_points 表新增字段
-alternative_methods TEXT,      -- 替代方法
-shortcut_techniques TEXT,     -- 快捷技巧
-optimization_tips TEXT        -- 优化建议
+-- New fields in knowledge_points table
+alternative_methods TEXT,      -- Alternative methods
+shortcut_techniques TEXT,     -- Shortcut techniques
+optimization_tips TEXT        -- Optimization tips
 ```
 
-### Agent服务增强
-- 新增优化方法生成提示词
-- 增强RAG数据获取逻辑
-- 添加方法对比分析
+### Agent Service Enhancement
+- New optimized method generation prompts
+- Enhanced RAG data retrieval logic
+- Added method comparison analysis
 
-### 前端展示
-- 优化方法标签页
-- 方法对比表格
-- 快捷技巧卡片
+### Frontend Display
+- Optimized methods tab
+- Method comparison table
+- Shortcut technique cards
 
-## 使用场景
+## Usage Scenarios
 
-### 场景1：学生自主学习
-学生查看错题分析时，可以看到：
-- 自己的解题方法
-- 更优的解题方法
-- 效率提升说明
+### Scenario 1: Student Self-Learning
+When students view wrong question analysis, they can see:
+- Their problem-solving method
+- Better problem-solving methods
+- Efficiency improvement explanations
 
-### 场景2：教师教学
-教师可以：
-- 展示多种解题方法
-- 引导学生思考不同方法
-- 培养学生发散思维
+### Scenario 2: Teacher Instruction
+Teachers can:
+- Display multiple problem-solving methods
+- Guide students to think about different methods
+- Cultivate students' divergent thinking
 
-### 场景3：个性化推荐
-系统根据学生特点推荐：
-- 适合的学习方法
-- 重点练习方向
-- 效率提升建议
+### Scenario 3: Personalized Recommendations
+The system recommends based on student characteristics:
+- Suitable learning methods
+- Key practice directions
+- Efficiency improvement suggestions
 
-## 示例
+## Examples
 
-**题目**：求函数 f(x) = x³ - 3x² + 2 的极值点
+**Problem**: Find the extreme points of function f(x) = x³ - 3x² + 2
 
-**学生方法**（标准方法）：
-1. 求导：f'(x) = 3x² - 6x
-2. 求二阶导数：f''(x) = 6x - 6
-3. 解方程找临界点
-4. 用二阶导数判断
+**Student Method** (Standard Method):
+1. Find derivative: f'(x) = 3x² - 6x
+2. Find second derivative: f''(x) = 6x - 6
+3. Solve equation for critical points
+4. Use second derivative for judgment
 
-**推荐方法**（符号表法）：
-1. 求导并分解：f'(x) = 3x(x-2)
-2. 画数轴标零点
-3. 判断符号变化
-4. 直接判断极值类型
+**Recommended Method** (Sign Table Method):
+1. Find and factor derivative: f'(x) = 3x(x-2)
+2. Mark zeros on number line
+3. Determine sign changes
+4. Directly judge extreme value types
 
-**优势**：
-- 减少1步
-- 无需二阶导数计算
-- 降低出错风险
-- 节省30%时间
+**Advantages**:
+- Reduces 1 step
+- No second derivative calculation needed
+- Lower error risk
+- Saves 30% time
 
-## 未来优化方向
+## Future Optimization Directions
 
-1. **智能推荐**：根据学生特点推荐最适合的方法
-2. **学习路径**：规划从基础方法到高级方法的渐进学习
-3. **练习推送**：基于掌握的优化方法推送针对性练习
-4. **效果追踪**：跟踪学生方法改进情况
+1. **Smart Recommendations**: Recommend the most suitable methods based on student characteristics
+2. **Learning Paths**: Plan progressive learning from basic to advanced methods
+3. **Practice Push**: Push targeted practice based on mastered optimization methods
+4. **Effectiveness Tracking**: Track students' method improvement progress
 
-## 数据结构
+## Data Structures
 
-### 优化方法JSON结构
+### Optimized Method JSON Structure
 ```json
 {
-  "method_name": "导数符号表法",
-  "method_description": "通过分析导数符号变化...",
-  "steps": ["求导分解", "画数轴", "判断符号", "得出结论"],
-  "advantages": ["无需二阶导数", "步骤更少", "不易出错"],
-  "适用场景": "只需要判断极值类型时",
+  "method_name": "Derivative Sign Table Method",
+  "method_description": "Analyze derivative sign changes...",
+  "steps": ["Find derivative and factor", "Draw number line", "Determine signs", "Draw conclusions"],
+  "advantages": ["No second derivative needed", "Fewer steps", "Less error-prone"],
+  "applicable_scenarios": "When only need to determine extreme value types",
   "examples": ["...", "..."]
 }
 ```
 
-### 快捷技巧JSON结构
+### Shortcut Technique JSON Structure
 ```json
 {
-  "technique_name": "速判极值类型",
-  "description": "左正右负→极大值...",
-  "when_to_use": "选择题、判断题",
+  "technique_name": "Quick Extreme Value Type Judgment",
+  "description": "Left positive, right negative → Maximum...",
+  "when_to_use": "Multiple choice, true/false questions",
   "example": "..."
 }
 ```
 
-## 总结
+## Summary
 
-优化方法推荐功能帮助学生：
-- 🌟 拓展解题思路
-- ⚡ 提高解题效率
-- 📚 掌握多种方法
-- 🎯 建立数学思维
+The optimized method recommendation feature helps students:
+- 🌟 Expand problem-solving thinking
+- ⚡ Improve problem-solving efficiency
+- 📚 Master multiple methods
+- 🎯 Build mathematical thinking
 
-通过RAG系统的知识库支持，系统能够为每道题目提供全面的方法推荐和分析，真正实现因材施教、个性化学习。
+With the knowledge base support of the RAG system, the system can provide comprehensive method recommendations and analysis for each problem, truly achieving individualized teaching and personalized learning.

@@ -25,7 +25,7 @@ export default function GradePanel() {
  const [message, setMessage] = useState('');
  const handleSubmit = async () => {
  if (!paperId || !studentId || !answers) {
- setMessage('请填写所有字段');
+ setMessage('Please fill in all fields');
  return;
  }
  setLoading(true);
@@ -34,10 +34,10 @@ export default function GradePanel() {
  try {
  const gradingResult = await gradeExam(paperId, studentId, answers);
  setResult(gradingResult);
- setMessage(`✅ 批改完成！得分: ${gradingResult.score}/${gradingResult.total_score}`);
+ setMessage(`✅ Grading completed! Score: ${gradingResult.score}/${gradingResult.total_score}`);
  }
  catch (error) {
- setMessage('❌ 批改失败，请重试');
+ setMessage('❌ Grading failed, please try again');
  console.error(error);
  }
  finally {
@@ -45,24 +45,24 @@ export default function GradePanel() {
  }
  };
  return (<div className="grade-panel">
- <h2>✏️ 试卷批改</h2>
+ <h2>✏️ Grade Exam</h2>
  <div className="form-group">
- <label>试卷ID</label>
- <input type="text" value={paperId} onChange={(e) => setPaperId(e.target.value)} placeholder="请输入要批改的试卷ID" className="text-input"/>
+ <label>Paper ID</label>
+ <input type="text" value={paperId} onChange={(e) => setPaperId(e.target.value)} placeholder="Enter paper ID to grade" className="text-input"/>
  </div>
  <div className="form-group">
- <label>学生ID</label>
+ <label>Student ID</label>
  <input type="text" value={studentId} onChange={(e) => {
  setStudentId(e.target.value);
  localStorage.setItem('studentId', e.target.value);
- }} placeholder="请输入学生ID" className="text-input"/>
+ }} placeholder="Enter student ID" className="text-input"/>
  </div>
  <div className="form-group">
- <label>学生答案（JSON格式）</label>
- <textarea value={answers} onChange={(e) => setAnswers(e.target.value)} placeholder='{"question_1": "答案1", "question_2": "答案2", ...}' className="textarea-input" rows={6}/>
+ <label>Student Answers (JSON format)</label>
+ <textarea value={answers} onChange={(e) => setAnswers(e.target.value)} placeholder='{"question_1": "answer1", "question_2": "answer2", ...}' className="textarea-input" rows={6}/>
  </div>
  <button onClick={handleSubmit} disabled={loading} className="submit-btn">
- {loading ? '批改中...' : '开始批改'}
+ {loading ? 'Grading...' : 'Start Grading'}
  </button>
  {message && <div className="message">{message}</div>}
 
@@ -73,13 +73,13 @@ export default function GradePanel() {
  <span className="score-total">/ {result.total_score}</span>
  </div>
  <div className="score-info">
- <p className="score-label">总得分</p>
+ <p className="score-label">Total Score</p>
  <p className="score-percentage">
  {((result.score / result.total_score) * 100).toFixed(1)}%
  </p>
  </div>
  </div>
- <h3>批改详情</h3>
+ <h3>Grading Details</h3>
  <div className="question-results">
  {result.results.map((question, index) => (<div key={index} className={`question-result ${question.is_correct ? 'correct' : 'wrong'}`}>
  <div className="question-header">
@@ -88,17 +88,17 @@ export default function GradePanel() {
  {question.score}/{question.max_score}
  </span>
  <span className={`question-status ${question.is_correct ? 'correct' : 'wrong'}`}>
- {question.is_correct ? '✓ 正确' : '✗ 错误'}
+ {question.is_correct ? '✓ Correct' : '✗ Wrong'}
  </span>
  </div>
  <div className="question-content">
- <p><strong>题目ID:</strong> {question.question_id}</p>
- <p><strong>学生答案:</strong> {question.student_answer}</p>
- <p><strong>正确答案:</strong> {question.correct_answer}</p>
+ <p><strong>Question ID:</strong> {question.question_id}</p>
+ <p><strong>Student Answer:</strong> {question.student_answer}</p>
+ <p><strong>Correct Answer:</strong> {question.correct_answer}</p>
  {!question.is_correct && (<>
- <p><strong>错误原因:</strong> {question.error_reason}</p>
- <p><strong>知识点:</strong> {question.knowledge_points.join(', ')}</p>
- <p><strong>难度:</strong> {question.difficulty}</p>
+ <p><strong>Error Reason:</strong> {question.error_reason}</p>
+ <p><strong>Knowledge Points:</strong> {question.knowledge_points.join(', ')}</p>
+ <p><strong>Difficulty:</strong> {question.difficulty}</p>
  </>)}
  </div>
  </div>))}

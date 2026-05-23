@@ -18,50 +18,50 @@ export default function Header({ currentPage, onPageChange }: HeaderProps) {
       <div className="header-content">
         <div className="logo">
           <h1>📝 ExamGrader</h1>
-          <p>智能试卷批改系统</p>
+          <p>Intelligent Exam Grading System</p>
         </div>
         <nav className="nav">
           <button
             className={`nav-btn ${currentPage === 'upload' ? 'active' : ''}`}
             onClick={() => onPageChange('upload')}
           >
-            上传试卷
+            Upload Paper
           </button>
           <button
             className={`nav-btn ${currentPage === 'grade' ? 'active' : ''}`}
             onClick={() => onPageChange('grade')}
           >
-            试卷批改
+            Grade Exam
           </button>
           <button
             className={`nav-btn ${currentPage === 'step' ? 'active' : ''}`}
             onClick={() => onPageChange('step')}
           >
-            步骤分析
+            Step Analysis
           </button>
           <button
             className={`nav-btn ${currentPage === 'wrong' ? 'active' : ''}`}
             onClick={() => onPageChange('wrong')}
           >
-            错题本
+            Wrong Questions
           </button>
           <button
             className={`nav-btn ${currentPage === 'review' ? 'active' : ''}`}
             onClick={() => onPageChange('review')}
           >
-            复习建议
+            Review Suggestions
           </button>
           <button
             className={`nav-btn ${currentPage === 'quiz' ? 'active' : ''}`}
             onClick={() => onPageChange('quiz')}
           >
-            检查卷
+            Quiz Generator
           </button>
         </nav>
         <div className="student-input">
           <input
             type="text"
-            placeholder="学生ID"
+            placeholder="Student ID"
             value={studentId}
             onChange={handleStudentIdChange}
             className="student-id-input"

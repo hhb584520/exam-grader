@@ -10,7 +10,7 @@ export default function QuizGenerator() {
 
   const handleGenerate = async () => {
     if (!studentId) {
-      setMessage('请先输入学生ID')
+      setMessage('Please enter student ID first')
       return
     }
 
@@ -22,7 +22,7 @@ export default function QuizGenerator() {
       const result = await generateQuiz(studentId, questionCount)
       setQuiz(result)
     } catch (error) {
-      setMessage('❌ 生成检查卷失败，请重试')
+      setMessage('❌ Failed to generate quiz, please try again')
       console.error(error)
     } finally {
       setLoading(false)
@@ -31,29 +31,29 @@ export default function QuizGenerator() {
 
   const getQuestionTypeName = (type: string) => {
     switch (type) {
-      case 'choice': return '选择题'
-      case 'fill': return '填空题'
-      case 'short': return '简答题'
-      case 'essay': return '问答题'
+      case 'choice': return 'Multiple Choice'
+      case 'fill': return 'Fill in the Blank'
+      case 'short': return 'Short Answer'
+      case 'essay': return 'Essay'
       default: return type
     }
   }
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case '简单': return 'difficulty-easy'
-      case '中等': return 'difficulty-medium'
-      case '困难': return 'difficulty-hard'
+      case 'Easy': return 'difficulty-easy'
+      case 'Medium': return 'difficulty-medium'
+      case 'Hard': return 'difficulty-hard'
       default: return 'difficulty-medium'
     }
   }
 
   return (
     <div className="quiz-panel">
-      <h2>📝 生成检查卷</h2>
+      <h2>📝 Generate Quiz</h2>
       <div className="form-row">
         <div className="form-group">
-          <label>学生ID</label>
+          <label>Student ID</label>
           <input
             type="text"
             value={studentId}
@@ -61,12 +61,12 @@ export default function QuizGenerator() {
               setStudentId(e.target.value)
               localStorage.setItem('studentId', e.target.value)
             }}
-            placeholder="请输入学生ID"
+            placeholder="Enter student ID"
             className="text-input"
           />
         </div>
         <div className="form-group">
-          <label>题目数量</label>
+          <label>Question Count</label>
           <input
             type="number"
             value={questionCount}
@@ -77,7 +77,7 @@ export default function QuizGenerator() {
           />
         </div>
         <button onClick={handleGenerate} disabled={loading} className="submit-btn">
-          {loading ? '生成中...' : '生成检查卷'}
+          {loading ? 'Generating...' : 'Generate Quiz'}
         </button>
       </div>
       {message && <div className="message">{message}</div>}
@@ -87,9 +87,9 @@ export default function QuizGenerator() {
           <div className="quiz-header">
             <h3>{quiz.title}</h3>
             <p className="quiz-meta">
-              <span>科目: {quiz.subject}</span>
-              <span>总分: {quiz.total_score}分</span>
-              <span>题目数: {quiz.questions.length}道</span>
+              <span>Subject: {quiz.subject}</span>
+              <span>Total Score: {quiz.total_score} points</span>
+              <span>Questions: {quiz.questions.length}</span>
             </p>
           </div>
 
@@ -102,7 +102,7 @@ export default function QuizGenerator() {
                   <span className={`difficulty ${getDifficultyColor(question.difficulty)}`}>
                     {question.difficulty}
                   </span>
-                  <span className="question-score">{question.score}分</span>
+                  <span className="question-score">{question.score} points</span>
                 </div>
                 <p className="question-text">{question.content}</p>
                 {question.options && (
@@ -120,7 +120,7 @@ export default function QuizGenerator() {
                   ))}
                 </div>
                 <div className="answer-section">
-                  <strong>参考答案:</strong> {question.correct_answer}
+                  <strong>Reference Answer:</strong> {question.correct_answer}
                 </div>
               </div>
             ))}

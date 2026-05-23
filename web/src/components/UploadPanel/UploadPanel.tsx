@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { uploadPaper } from '../../services/api'
 
 export default function UploadPanel() {
@@ -8,6 +8,7 @@ export default function UploadPanel() {
   const [subject, setSubject] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -16,9 +17,13 @@ export default function UploadPanel() {
     }
   }
 
+  const handleChooseFile = () => {
+    fileInputRef.current?.click()
+  }
+
   const handleSubmit = async () => {
     if (!file || !paperId || !title || !subject) {
-      setMessage('请填写所有字段')
+      setMessage('Please fill in all fields')
       return
     }
 
@@ -27,13 +32,16 @@ export default function UploadPanel() {
 
     try {
       const result = await uploadPaper(file, paperId, title, subject)
-      setMessage(`✅ 上传成功！试卷ID: ${result.paper_id}`)
+      setMessage(`✅ Upload successful! Paper ID: ${result.paper_id}`)
       setFile(null)
       setPaperId('')
       setTitle('')
       setSubject('')
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
     } catch (error) {
-      setMessage('❌ 上传失败，请重试')
+      setMessage('❌ Upload failed, please try again')
       console.error(error)
     } finally {
       setLoading(false)
@@ -42,54 +50,58 @@ export default function UploadPanel() {
 
   return (
     <div className="upload-panel">
-      <h2>📤 上传试卷</h2>
+      <h2>📤 Upload Exam Paper</h2>
       <div className="form-group">
-        <label>试卷文件</label>
+        <label>Paper File</label>
         <input
+          ref={fileInputRef}
           type="file"
           accept=".txt,.md,.pdf"
           onChange={handleFileChange}
-          className="file-input"
+          style={{ display: 'none' }}
         />
-        {file && <span className="file-name">已选择: {file.name}</span>}
+        <button onClick={handleChooseFile} className="file-choose-btn">
+          Choose File
+        </button>
+        {file && <span className="file-name">Selected: {file.name}</span>}
       </div>
       <div className="form-group">
-        <label>试卷ID</label>
+        <label>Paper ID</label>
         <input
           type="text"
           value={paperId}
           onChange={(e) => setPaperId(e.target.value)}
-          placeholder="请输入试卷唯一标识"
+          placeholder="Enter paper unique ID"
           className="text-input"
         />
       </div>
       <div className="form-group">
-        <label>试卷标题</label>
+        <label>Paper Title</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="请输入试卷标题"
+          placeholder="Enter paper title"
           className="text-input"
         />
       </div>
       <div className="form-group">
-        <label>科目</label>
+        <label>Subject</label>
         <select value={subject} onChange={(e) => setSubject(e.target.value)} className="select-input">
-          <option value="">请选择科目</option>
-          <option value="数学">数学</option>
-          <option value="语文">语文</option>
-          <option value="英语">英语</option>
-          <option value="物理">物理</option>
-          <option value="化学">化学</option>
-          <option value="生物">生物</option>
-          <option value="历史">历史</option>
-          <option value="地理">地理</option>
-          <option value="政治">政治</option>
+          <option value="">Select subject</option>
+          <option value="Mathematics">Mathematics</option>
+          <option value="Chinese">Chinese</option>
+          <option value="English">English</option>
+          <option value="Physics">Physics</option>
+          <option value="Chemistry">Chemistry</option>
+          <option value="Biology">Biology</option>
+          <option value="History">History</option>
+          <option value="Geography">Geography</option>
+          <option value="Politics">Politics</option>
         </select>
       </div>
       <button onClick={handleSubmit} disabled={loading} className="submit-btn">
-        {loading ? '上传中...' : '上传试卷'}
+        {loading ? 'Uploading...' : 'Upload Paper'}
       </button>
       {message && <div className="message">{message}</div>}
     </div>

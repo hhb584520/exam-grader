@@ -9,7 +9,7 @@ export default function WrongQuestions() {
 
   const fetchWrongQuestions = async () => {
     if (!studentId) {
-      setMessage('请先输入学生ID')
+      setMessage('Please enter student ID first')
       return
     }
 
@@ -20,10 +20,10 @@ export default function WrongQuestions() {
       const questions = await getWrongQuestions(studentId)
       setWrongQuestions(questions)
       if (questions.length === 0) {
-        setMessage('🎉 暂无错题，继续保持！')
+        setMessage('🎉 No wrong questions yet, keep up the good work!')
       }
     } catch (error) {
-      setMessage('❌ 获取错题失败，请重试')
+      setMessage('❌ Failed to get wrong questions, please try again')
       console.error(error)
     } finally {
       setLoading(false)
@@ -38,19 +38,19 @@ export default function WrongQuestions() {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case '简单': return 'difficulty-easy'
-      case '中等': return 'difficulty-medium'
-      case '困难': return 'difficulty-hard'
+      case 'Easy': return 'difficulty-easy'
+      case 'Medium': return 'difficulty-medium'
+      case 'Hard': return 'difficulty-hard'
       default: return 'difficulty-medium'
     }
   }
 
   return (
     <div className="wrong-questions-panel">
-      <h2>📚 错题本</h2>
+      <h2>📚 Wrong Questions Collection</h2>
       <div className="form-row">
         <div className="form-group">
-          <label>学生ID</label>
+          <label>Student ID</label>
           <input
             type="text"
             value={studentId}
@@ -58,19 +58,19 @@ export default function WrongQuestions() {
               setStudentId(e.target.value)
               localStorage.setItem('studentId', e.target.value)
             }}
-            placeholder="请输入学生ID"
+            placeholder="Enter student ID"
             className="text-input"
           />
         </div>
         <button onClick={fetchWrongQuestions} disabled={loading} className="submit-btn">
-          {loading ? '加载中...' : '查询错题'}
+          {loading ? 'Loading...' : 'Query Wrong Questions'}
         </button>
       </div>
       {message && <div className="message">{message}</div>}
 
       {wrongQuestions.length > 0 && (
         <div className="questions-list">
-          <p className="count-info">共 {wrongQuestions.length} 道错题</p>
+          <p className="count-info">Total {wrongQuestions.length} wrong questions</p>
           {wrongQuestions.map((question) => (
             <div key={question.id} className="question-card">
               <div className="question-meta">
@@ -83,11 +83,11 @@ export default function WrongQuestions() {
                 <p className="question-content">{question.question_content}</p>
                 <div className="answer-comparison">
                   <div className="answer-item wrong">
-                    <span className="label">你的答案</span>
+                    <span className="label">Your Answer</span>
                     <span className="value">{question.student_answer}</span>
                   </div>
                   <div className="answer-item correct">
-                    <span className="label">正确答案</span>
+                    <span className="label">Correct Answer</span>
                     <span className="value">{question.correct_answer}</span>
                   </div>
                 </div>

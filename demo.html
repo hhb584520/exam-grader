@@ -6,13 +6,13 @@
     <title>ExamGrader - Intelligent Exam Grading System Demo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #86efac 0%, #4ade80 50%, #22c55e 100%); min-height: 100vh; color: #333; }
         .header { background: rgba(255,255,255,0.95); padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .header-content { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
         .logo h1 { font-size: 1.5rem; color: #333; }
         .nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .nav-btn { padding: 0.5rem 1rem; border: none; border-radius: 6px; background: transparent; cursor: pointer; transition: all 0.3s; font-size: 0.85rem; }
-        .nav-btn:hover, .nav-btn.active { background: #667eea; color: white; }
+        .nav-btn:hover, .nav-btn.active { background: #22c55e; color: white; }
         .main-content { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
         .section { background: white; border-radius: 16px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
         .section h2 { color: #333; margin-bottom: 1.5rem; font-size: 1.4rem; }
@@ -20,11 +20,11 @@
         .demo-card:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
         .card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
         .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .icon-blue { background: rgba(102,126,234,0.2); }
+        .icon-blue { background: rgba(72,187,120,0.2); }
         .icon-green { background: rgba(72,187,120,0.2); }
         .icon-yellow { background: rgba(251,191,36,0.2); }
         .icon-red { background: rgba(239,68,68,0.2); }
-        .icon-purple { background: rgba(126,34,206,0.2); }
+        .icon-purple { background: rgba(72,187,120,0.2); }
         .icon-cyan { background: rgba(6,182,212,0.2); }
         .icon-orange { background: rgba(249,115,22,0.2); }
         .card-title { font-size: 1.1rem; font-weight: 600; }
@@ -35,26 +35,26 @@
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
         .text-input, .select-input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
         .textarea-input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; min-height: 100px; }
-        .submit-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: transform 0.3s; }
+        .submit-btn { background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: transform 0.3s; }
         .submit-btn:hover { transform: translateY(-2px); }
         .result-panel { margin-top: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px; }
-        .score-circle { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; margin-bottom: 1rem; }
+        .score-circle { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); display: flex; align-items: center; justify-content: center; color: white; margin-bottom: 1rem; }
         .score-value { font-size: 2rem; font-weight: bold; }
         .question-result { padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border-left: 4px solid; }
         .question-result.correct { background: rgba(72,187,120,0.1); border-color: #48bb78; }
         .question-result.wrong { background: rgba(239,68,68,0.1); border-color: #ef4444; }
-        .tag { background: rgba(102,126,234,0.1); color: #667eea; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem; margin-right: 0.5rem; }
+        .tag { background: rgba(72,187,120,0.1); color: #22c55e; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem; margin-right: 0.5rem; }
         .weak-point { background: rgba(239,68,68,0.1); color: #dc2626; padding: 0.5rem 1rem; border-radius: 8px; margin-right: 0.5rem; margin-bottom: 0.5rem; display: inline-block; }
         .quiz-item { background: #f8fafc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
         .step-item { padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem; font-size: 0.9rem; }
         .step-item.correct { background: rgba(72,187,120,0.1); border-left: 3px solid #48bb78; }
         .step-item.wrong { background: rgba(239,68,68,0.1); border-left: 3px solid #ef4444; }
-        .step-item.expected { background: rgba(102,126,234,0.1); border-left: 3px solid #667eea; }
+        .step-item.expected { background: rgba(72,187,120,0.1); border-left: 3px solid #22c55e; }
         .error-type { background: rgba(239,68,68,0.2); color: #dc2626; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem; margin-left: 0.5rem; }
         .status-badge { padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
         .status-badge.correct { background: rgba(72,187,120,0.2); color: #166534; }
         .status-badge.wrong { background: rgba(239,68,68,0.2); color: #dc2626; }
-        .tip-badge { background: rgba(102,126,234,0.2); color: #4338ca; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; }
+        .tip-badge { background: rgba(72,187,120,0.2); color: #166534; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; }
         .severity-badge { padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600; }
         .severity-badge.low { background: rgba(72,187,120,0.2); color: #166534; }
         .severity-badge.medium { background: rgba(251,191,36,0.2); color: #92400e; }
@@ -66,7 +66,7 @@
         .footer { text-align: center; padding: 1rem; color: rgba(255,255,255,0.8); }
         .tab-container { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
         .tab-btn { padding: 0.5rem 1rem; border: 1px solid #ddd; border-radius: 6px; background: white; cursor: pointer; transition: all 0.3s; }
-        .tab-btn.active { background: #667eea; color: white; border-color: #667eea; }
+        .tab-btn.active { background: #22c55e; color: white; border-color: #22c55e; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
     </style>
@@ -287,7 +287,7 @@
                 <div class="form-group"><label>Number of Questions</label><input type="number" class="text-input" value="5" min="1" max="20"></div>
                 <button class="submit-btn" onclick="showQuiz()">Generate Check Paper</button>
                 <div id="quiz-result" style="margin-top:1.5rem;display:none;">
-                    <div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:1.5rem;border-radius:12px;"><h3>Math Special Check Paper</h3><p>Subject: Math | Total: 50 points | Questions: 5</p></div>
+                    <div style="background:linear-gradient(135deg,#4ade80 0%,#22c55e 100%);color:white;padding:1.5rem;border-radius:12px;"><h3>Math Special Check Paper</h3><p>Subject: Math | Total: 50 points | Questions: 5</p></div>
                     <div style="margin-top:1rem;">
                         <div class="quiz-item"><strong>1. Multiple Choice (5pt)</strong><p>15th term of 2,5,8,11...? A.44 B.42 C.47 D.40</p><p style="color:#48bb78;">Answer: A</p><span class="tag">Arithmetic Sequence</span></div>
                         <div class="quiz-item"><strong>2. Fill-in (5pt)</strong><p>a₁=3, d=2, a₁₀=____</p><p style="color:#48bb78;">Answer: 21</p><span class="tag">Arithmetic Sequence</span></div>
@@ -308,7 +308,7 @@
                     <div style="background:rgba(72,187,120,0.1);border:1px solid rgba(72,187,120,0.3);border-radius:8px;padding:1rem;margin-bottom:1rem;"><h4 style="color:#166534;margin-bottom:0.5rem;">📊 Weak Points</h4><div style="display:flex;gap:0.5rem;flex-wrap:wrap;"><span class="tag" style="background:#fed7d7;color:#c53030;">Derivative Extrema (45%)</span><span class="tag" style="background:#feebc8;color:#c05621;">Arithmetic Sequence (55%)</span></div></div>
                     <h4 style="margin-bottom:1rem;">🎯 Recommended Materials</h4>
                     <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:1rem;margin-bottom:1rem;"><div style="display:flex;align-items:start;gap:1rem;"><div style="font-size:2rem;">🎬</div><div style="flex:1;"><h5 style="margin-bottom:0.5rem;">Derivative Extrema Animation</h5><p style="font-size:0.85rem;color:#666;">Visual understanding of derivative extrema</p><div style="display:flex;gap:1rem;font-size:0.85rem;color:#888;"><span>⏱️ 15min</span><span>⭐ 4.8/5</span></div></div><button class="submit-btn" style="padding:0.5rem 1rem;font-size:0.85rem;">Start Learning</button></div></div>
-                    <div style="background:rgba(102,126,234,0.1);border:1px solid rgba(102,126,234,0.3);border-radius:8px;padding:1rem;margin-top:1rem;"><h5 style="color:#4338ca;margin-bottom:0.5rem;">📅 Learning Order</h5><ol style="margin-left:1.5rem;font-size:0.9rem;color:#666;"><li>Watch derivative animation (15min)</li><li>Learn sequence video (25min)</li></ol></div>
+                    <div style="background:rgba(72,187,120,0.1);border:1px solid rgba(72,187,120,0.3);border-radius:8px;padding:1rem;margin-top:1rem;"><h5 style="color:#166534;margin-bottom:0.5rem;">📅 Learning Order</h5><ol style="margin-left:1.5rem;font-size:0.9rem;color:#666;"><li>Watch derivative animation (15min)</li><li>Learn sequence video (25min)</li></ol></div>
                 </div>
             </div>
         </section>
@@ -320,7 +320,7 @@
                 <div class="form-group"><label>Student ID</label><input type="text" class="text-input" placeholder="student_001" value="student_001"></div>
                 <button class="submit-btn" onclick="showExamAnalysis()">Start Analysis</button>
                 <div id="exam-analysis-result" style="margin-top:1.5rem;display:none;">
-                    <div style="background:linear-gradient(135deg,#9f7aea 0%,#805ad5 100%);color:white;padding:1.5rem;border-radius:12px;margin-bottom:1rem;"><h3>📈 College Entrance Exam Analysis</h3><p>Years: 2021-2023 | Student: student_001</p></div>
+                    <div style="background:linear-gradient(135deg,#4ade80 0%,#22c55e 100%);color:white;padding:1.5rem;border-radius:12px;margin-bottom:1rem;"><h3>📈 College Entrance Exam Analysis</h3><p>Years: 2021-2023 | Student: student_001</p></div>
                     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;">
                         <div style="background:#c6f6d5;padding:1rem;border-radius:8px;text-align:center;"><div style="font-size:1.5rem;font-weight:600;color:#276749;">12</div><div style="font-size:0.85rem;color:#666;">Mastered</div></div>
                         <div style="background:#fed7d7;padding:1rem;border-radius:8px;text-align:center;"><div style="font-size:1.5rem;font-weight:600;color:#c53030;">5</div><div style="font-size:0.85rem;color:#666;">Weak</div></div>

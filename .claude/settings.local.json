@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "Bash(pip install *)",
+      "Read(//c/Users/huhai/AppData/Local/Programs/**)",
+      "Read(//c/Users/huhai/AppData/Local/Microsoft/WindowsApps/**)",
+      "Bash(unzip -o \"ExamGrader - 智能试卷批改系统.pptx\" -d /tmp/pptx_extract)",
+      "Bash(/c/Users/huhai/AppData/Local/Microsoft/WindowsApps/python3.exe *)"
+    ]
+  }
+}

@@ -69,6 +69,105 @@
         .tab-btn.active { background: #22c55e; color: white; border-color: #22c55e; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        
+        /* Intro/Landing Page Styles */
+        .intro-hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        .intro-hero h1 {
+            font-size: 3rem;
+            color: #166534;
+            margin-bottom: 1rem;
+        }
+        .intro-hero .subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .intro-hero .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+            text-align: left;
+        }
+        .intro-hero .feature-item {
+            background: linear-gradient(135deg, rgba(72,187,120,0.1) 0%, rgba(34,197,94,0.05) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #22c55e;
+        }
+        .intro-hero .feature-item h3 {
+            color: #166534;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .intro-hero .feature-item p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .intro-hero .cta-buttons {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .intro-hero .cta-btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        .intro-hero .cta-btn.primary {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: white;
+        }
+        .intro-hero .cta-btn.secondary {
+            background: white;
+            color: #22c55e;
+            border: 2px solid #22c55e;
+        }
+        .intro-hero .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(34,197,94,0.4);
+        }
+        .intro-hero .tech-stack {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        .intro-hero .tech-stack h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .intro-hero .tech-tags {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .intro-hero .tech-tag {
+            background: rgba(72,187,120,0.1);
+            color: #166534;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -76,7 +175,8 @@
         <div class="header-content">
             <div class="logo"><h1>📝 ExamGrader</h1></div>
             <nav class="nav">
-                <button class="nav-btn active" onclick="showSection('upload')">Upload Exam</button>
+                <button class="nav-btn active" onclick="showSection('intro')">🏠 Home</button>
+                <button class="nav-btn" onclick="showSection('upload')">Upload Exam</button>
                 <button class="nav-btn" onclick="showSection('grade')">Grade Exam</button>
                 <button class="nav-btn" onclick="showSection('step')">Step Analysis</button>
                 <button class="nav-btn" onclick="showSection('wrong')">Wrong Questions</button>
@@ -91,7 +191,65 @@
         </div>
     </header>
     <main class="main-content">
-        <section id="upload" class="section demo-content active">
+        <!-- Introduction / Landing Page -->
+        <section id="intro" class="intro-hero demo-content active">
+            <h1>📚 ExamGrader</h1>
+            <p class="subtitle">Intelligent Exam Grading System - AI-Powered Learning Companion</p>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>🤖 AI Intelligent Grading</h3>
+                    <p>Automatically grade exams and identify wrong answers with high accuracy using advanced AI models</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🔍 Step-Level Analysis</h3>
+                    <p>Analyze each problem-solving step to identify where mistakes occur, not just the final answer</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📖 RAG Knowledge System</h3>
+                    <p>Retrieve correct methods and optimized solutions from knowledge base to expand student thinking</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📝 Personalized Wrong Questions</h3>
+                    <p>Automatically collect and organize wrong questions to create personalized study materials</p>
+                </div>
+                <div class="feature-item">
+                    <h3>💡 Smart Review Suggestions</h3>
+                    <p>Generate targeted review plans based on individual weak points and upcoming exam dates</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📊 Teacher Dashboard</h3>
+                    <p>Provide class performance analysis and teaching improvement suggestions for educators</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🎯 Learning Material Recommendation</h3>
+                    <p>Recommend videos, animations, and documents based on knowledge gaps with effectiveness tracking</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📈 College Entrance Exam Analysis</h3>
+                    <p>Compare student knowledge mastery with high-frequency exam points from past years</p>
+                </div>
+            </div>
+            
+            <div class="cta-buttons">
+                <button class="cta-btn primary" onclick="showSection('upload')">🚀 Get Started</button>
+                <button class="cta-btn secondary" onclick="showSection('step')">🔍 View Demo</button>
+            </div>
+            
+            <div class="tech-stack">
+                <h3>Built with Modern Technologies</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">OPEA Comps</span>
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">PostgreSQL + pgvector</span>
+                    <span class="tech-tag">vLLM</span>
+                    <span class="tech-tag">RAG System</span>
+                    <span class="tech-tag">AI Agents</span>
+                </div>
+            </div>
+        </section>
+        
+        <section id="upload" class="section demo-content">
             <h2>📤 Upload Exam</h2>
             <div class="demo-card">
                 <div class="card-header"><div class="icon icon-blue">📁</div><div><div class="card-title">Exam File Upload</div><div class="card-desc">Supports PDF, Word, TXT and other formats</div></div></div>

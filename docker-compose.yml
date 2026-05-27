@@ -1,0 +1,167 @@
+version: '3.8'
+
+services:
+  # PostgreSQL with pgvector for vector database
+  postgres:
+    image: ankane/pgvector:latest
+    container_name: exam-grader-postgres
+    environment:
+      POSTGRES_DB: examgrader
+      POSTGRES_USER: examgrader
+      POSTGRES_PASSWORD: examgrader123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U examgrader"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - examgrader-network
+
+  # Redis for caching and message queue
+  redis:
+    image: redis:latest
+    container_name: exam-grader-redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - examgrader-network
+
+  # FastAPI API Service
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: exam-grader-api
+    environment:
+      - DATABASE_URL=postgresql://examgrader:examgrader123@postgres:5432/examgrader
+      - REDIS_URL=redis://redis:6379
+      - LLM_SERVICE_URL=http://llm:8000
+      - EMBEDDING_SERVICE_URL=http://embedding:8000
+      - AGENT_SERVICE_URL=http://agent:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - examgrader-network
+
+  # vLLM Service for LLM inference
+  llm:
+    image: vllm/vllm-openai:latest
+    container_name: exam-grader-llm
+    environment:
+      - MODEL=Qwen/Qwen2-7B-Instruct
+      - PORT=8000
+      - ENABLE_OPENAI_COMPATIBLE_API=true
+    ports:
+      - "8001:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/models"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+    networks:
+      - examgrader-network
+
+  # Embedding Service
+  embedding:
+    build:
+      context: ./embedding
+      dockerfile: Dockerfile
+    container_name: exam-grader-embedding
+    environment:
+      - PORT=8000
+    ports:
+      - "8002:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - examgrader-network
+
+  # Agent Service (OPEA Components)
+  agent:
+    build:
+      context: ./agent
+      dockerfile: Dockerfile
+    container_name: exam-grader-agent
+    environment:
+      - API_SERVICE_URL=http://api:8000
+      - LLM_SERVICE_URL=http://llm:8000
+      - EMBEDDING_SERVICE_URL=http://embedding:8000
+    ports:
+      - "8003:8000"
+    depends_on:
+      api:
+        condition: service_healthy
+      llm:
+        condition: service_healthy
+      embedding:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - examgrader-network
+
+  # Web UI Service
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: exam-grader-web
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    ports:
+      - "5173:5173"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - examgrader-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  examgrader-network:
+    driver: bridge

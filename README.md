@@ -1,7 +1,7 @@
 # ExamGrader - Intelligent Exam Grading System
 
 ![ExamGrader Logo](https://img.shields.io/badge/ExamGrader-AI%20Powered-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
+![License](https://img.shields.io/badge/License-Apache%202.0-green)
 ![Version](https://img.shields.io/badge/Version-1.0.0-orange)
 
 An intelligent exam grading system that integrates **AI-powered grading**, **step-level error analysis**, and **personalized learning recommendations** to form a complete learning loop.
@@ -29,6 +29,7 @@ ExamGrader is an AI-powered education platform designed to address key pain poin
 6. **Teacher Dashboard** - Class performance analysis and teaching recommendations
 7. **Material Recommendation** - Personalized learning resources with effectiveness tracking
 8. **College Entrance Exam Analysis** - Compare mastery with high-frequency exam points
+9. **OPEA Guardrails** - Enterprise-grade data protection and content safety
 
 ---
 
@@ -70,6 +71,70 @@ docker-compose ps
 | LLM Service | http://localhost:8001 |
 | Embedding Service | http://localhost:8002 |
 | Agent Service | http://localhost:8003 |
+| Guardrails Service | http://localhost:9090 |
+
+---
+
+## 🛡️ OPEA Guardrails - Data Protection
+
+ExamGrader implements OPEA Guardrails to protect all data flowing through the system. This provides enterprise-grade security with:
+
+### PII Detection & Redaction
+
+Automatically detects and redacts personally identifiable information:
+
+| PII Type | Examples |
+|----------|----------|
+| Email | user@example.com |
+| Phone | 123-456-7890, (123) 456-7890 |
+| SSN | 123-45-6789 |
+| Credit Card | 1234-5678-9012-3456 |
+| Student ID | S123456, ID: ABC123 |
+| Address | 123 Main Street, City, State |
+
+### Content Safety
+
+Prevents harmful, violent, or inappropriate content:
+
+| Category | Description |
+|----------|-------------|
+| `pii` | Personally Identifiable Information |
+| `harmful_content` | Potentially harmful or dangerous content |
+| `violence` | Violence-related content |
+| `hate_speech` | Hateful or discriminatory content |
+| `adult_content` | Adult or explicit content |
+| `illegal_content` | Illegal activities or content |
+| `self_harm` | Self-harm related content |
+| `spam` | Spam or promotional content |
+
+### Guardrails API
+
+```bash
+# Check content for PII and safety
+curl -X POST http://localhost:9090/v1/guardrail \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Student john@example.com scored 85"}'
+
+# Response
+{
+  "original_text": "Student john@example.com scored 85",
+  "redacted_text": "Student [EMAIL_REDACTED] scored 85",
+  "action": "redact",
+  "risk_categories": ["pii"],
+  "risk_score": 0.5,
+  "detected_entities": {"email": ["john@example.com"]},
+  "suggestions": ["Please remove or mask PII"],
+  "timestamp": "2024-01-15T10:30:00"
+}
+```
+
+### Risk Score Actions
+
+| Score Range | Action | Description |
+|-------------|--------|-------------|
+| 0.0 - 0.49 | PASS | Content is safe |
+| 0.5 - 0.79 | REDACT | Content needs redaction |
+| 0.8 - 1.0 | BLOCK | Content is blocked |
 
 ---
 
@@ -109,23 +174,16 @@ docker-compose ps
 
 ```
 exam-grader/
-├── api/                    # FastAPI backend service
-│   ├── app/               # Application code
-│   ├── tests/             # Unit tests
-│   └── Dockerfile
-├── agent/                 # OPEA-based agent service
-│   ├── agents/            # AI agents
-│   └── Dockerfile
-├── embedding/             # Embedding service
-│   └── Dockerfile
-├── web/                   # React frontend
-│   ├── src/              # Source code
-│   └── Dockerfile
-├── scripts/              # Database initialization
-│   └── init.sql
-├── docker-compose.yml    # Docker Compose configuration
-├── deploy.sh           # One-click deployment script
-└── README.md            # This file
+├── services/
+│   ├── api/                    # FastAPI backend service
+│   ├── agent/                 # OPEA-based agent service
+│   ├── embedding/              # Embedding service
+│   └── guardrails/             # OPEA Guardrails service
+├── web/                       # React frontend
+├── scripts/                   # Database initialization
+├── docker-compose.yml         # Docker Compose configuration
+├── deploy.sh                  # One-click deployment script
+└── README.md                  # This file
 ```
 
 ---
@@ -145,6 +203,7 @@ REDIS_URL=redis://redis:6379
 LLM_SERVICE_URL=http://llm:8000
 EMBEDDING_SERVICE_URL=http://embedding:8000
 AGENT_SERVICE_URL=http://agent:8000
+GUARDRAIL_SERVICE_URL=http://guardrails:9090
 
 # Model Configuration
 LLM_MODEL=Qwen/Qwen2-7B-Instruct
@@ -195,6 +254,7 @@ After successful deployment, you can expect:
 | Response Time | < 5 seconds |
 | Step Analysis Coverage | 100% of math problems |
 | Recommendation Relevance | > 90% |
+| Data Protection | 100% PII redaction |
 
 ---
 
@@ -232,6 +292,17 @@ After successful deployment, you can expect:
 | `/api/check-paper` | POST | Generate check paper |
 | `/api/materials` | GET | Get learning material recommendations |
 
+### Guardrails
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Health check |
+| `/v1/guardrail` | POST | Check content for PII/safety |
+| `/v1/guardrail/input` | POST | Check user input |
+| `/v1/guardrail/output` | POST | Check AI output |
+| `/v1/guardrail/batch` | POST | Batch check |
+| `/v1/categories` | GET | Get risk categories |
+
 ---
 
 ## 🧪 Testing
@@ -258,6 +329,9 @@ curl http://localhost:8001/v1/models
 
 # Check embedding service
 curl http://localhost:8002/health
+
+# Check guardrails service
+curl http://localhost:9090/health
 ```
 
 ---

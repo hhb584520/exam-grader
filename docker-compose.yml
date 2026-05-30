@@ -38,6 +38,24 @@ services:
     networks:
       - examgrader-network
 
+  # Guardrails Service (OPEA Guardrails for Data Protection)
+  guardrails:
+    build:
+      context: ./services/guardrails
+      dockerfile: Dockerfile
+    container_name: exam-grader-guardrails
+    environment:
+      - GUARDRAIL_PORT=9090
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - examgrader-network
+
   # FastAPI API Service
   api:
     build:
@@ -50,12 +68,15 @@ services:
       - LLM_SERVICE_URL=http://llm:8000
       - EMBEDDING_SERVICE_URL=http://embedding:8000
       - AGENT_SERVICE_URL=http://agent:8000
+      - GUARDRAIL_SERVICE_URL=http://guardrails:9090
     ports:
       - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      guardrails:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -118,13 +139,14 @@ services:
   # Agent Service (OPEA Components)
   agent:
     build:
-      context: ./agent
+      context: ./services/agent
       dockerfile: Dockerfile
     container_name: exam-grader-agent
     environment:
       - API_SERVICE_URL=http://api:8000
       - LLM_SERVICE_URL=http://llm:8000
       - EMBEDDING_SERVICE_URL=http://embedding:8000
+      - GUARDRAIL_SERVICE_URL=http://guardrails:9090
     ports:
       - "8003:8000"
     depends_on:
@@ -133,6 +155,8 @@ services:
       llm:
         condition: service_healthy
       embedding:
+        condition: service_healthy
+      guardrails:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]

@@ -36,13 +36,14 @@ ExamGrader is an AI-powered education platform designed to address key pain poin
 
 ### One-Click Deployment
 
-```powershell
+```bash
 # Clone the repository
 git clone https://github.com/examgrader/exam-grader.git
 cd exam-grader
 
 # Run the deployment script
-.\deploy.ps1
+chmod +x deploy.sh
+./deploy.sh
 ```
 
 The script will:
@@ -52,7 +53,7 @@ The script will:
 
 ### Manual Deployment
 
-```powershell
+```bash
 # Start all services
 docker-compose up -d
 
@@ -123,7 +124,7 @@ exam-grader/
 ├── scripts/              # Database initialization
 │   └── init.sql
 ├── docker-compose.yml    # Docker Compose configuration
-├── deploy.ps1           # One-click deployment script
+├── deploy.sh           # One-click deployment script
 └── README.md            # This file
 ```
 
@@ -158,12 +159,12 @@ EMBEDDING_MODEL=all-MiniLM-L6-v2
 | lite | API + Web only | Development/testing |
 | api-only | API only | Backend testing |
 
-```powershell
+```bash
 # Start in lite mode
-.\deploy.ps1 -Action start -Mode lite
+./deploy.sh start lite
 
 # Start API only
-.\deploy.ps1 -Action start -Mode api-only
+./deploy.sh start api-only
 ```
 
 ---
@@ -237,7 +238,7 @@ After successful deployment, you can expect:
 
 ### Run Tests
 
-```powershell
+```bash
 # Run API tests
 cd api
 docker-compose run api pytest
@@ -248,7 +249,7 @@ docker-compose run api pytest tests/integration
 
 ### Health Checks
 
-```powershell
+```bash
 # Check API health
 curl http://localhost:8000/health
 
